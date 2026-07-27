@@ -6,11 +6,7 @@ import ConsorciosSection from "@/components/home/ConsorciosSection";
 import AdministradorasSection from "@/components/home/AdministradorasSection";
 import ResultadosSection from "@/components/home/ResultadosSection";
 import SobreSection from "@/components/home/SobreSection";
-import PartnershipSection from "@/components/home/PartnershipSection";
-import CaseStudiesSection from "@/components/home/CaseStudiesSection";
-import ScheduleSection from "@/components/home/ScheduleSection";
 import FaqSection from "@/components/home/FaqSection";
-import BlogSection from "@/components/home/BlogSection";
 import CtaSection from "@/components/home/CtaSection";
 
 export default function Home() {
@@ -32,12 +28,6 @@ export default function Home() {
         {/* 07 */} <SobreSection />
         {/* 08 */} <FaqSection />
         {/* 09 */} <CtaSection />
-
-        {/* Sobras do template, sem equivalente no wireframe ainda. */}
-        <PartnershipSection />
-        <CaseStudiesSection />
-        <ScheduleSection />
-        <BlogSection />
       </main>
     </>
   );
