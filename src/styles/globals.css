@@ -1,0 +1,226 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   RBS Consultoria Inteligente — Design System
+   Fonte da verdade: Figma "LANDING PAGE - RBS" › pagina Estilos (node 3:2939)
+   ========================================================================== */
+
+@layer base {
+  :root {
+    /* --- Cores de marca --- */
+    --brand-primary: #ffffff;
+    --brand-secondary: #0a0a0a;
+    --brand-third: #d1a84b;
+
+    /* --- Escala de cinzas do Figma (invertida: 950 = claro, 200 = escuro) --- */
+    --neutral-200: #121214;
+    --neutral-900: #c4c4cc;
+    --neutral-950: #e1e1e6;
+    --gray-black: #000000;
+    --gray-white: #ffffff;
+    --color-white: #f2f2f2;
+
+    /* --- Papeis semanticos (tema escuro) --- */
+    --surface: var(--brand-secondary);
+    --surface-elevated: var(--neutral-200);
+    --text-primary: var(--color-white);
+    --text-muted: var(--neutral-900);
+    --text-accent: var(--brand-third);
+
+    /* --- Tipografia --- */
+    --font-heading: "Playfair Display", ui-serif, Georgia, serif;
+    --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--surface);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Titulos: Playfair Display Bold, line-height 120% em todos os breakpoints.
+     Mobile-first — os valores desktop entram a partir de md (768px).
+     H4 nao possui override mobile no design system. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: 2.5rem; /* 40px */
+  }
+  h2 {
+    font-size: 1.5rem; /* 24px */
+  }
+  h3 {
+    font-size: 1.25rem; /* 20px */
+  }
+  h4 {
+    font-size: 1.625rem; /* 26px */
+  }
+
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 4rem; /* 64px */
+    }
+    h2 {
+      font-size: 3rem; /* 48px */
+    }
+    h3 {
+      font-size: 2rem; /* 32px */
+    }
+  }
+
+  ::selection {
+    background-color: var(--brand-third);
+    color: var(--brand-secondary);
+  }
+}
+
+@layer components {
+  /* --------------------------------------------------------------------
+     Utilitarios tipograficos — use quando a tag semantica nao corresponder
+     ao tamanho visual (ex.: um <p> que precisa parecer H2).
+     -------------------------------------------------------------------- */
+  .text-heading-1 {
+    @apply font-serif text-h1-m md:text-h1;
+  }
+  .text-heading-2 {
+    @apply font-serif text-h2-m md:text-h2;
+  }
+  .text-heading-3 {
+    @apply font-serif text-h3-m md:text-h3;
+  }
+  .text-heading-4 {
+    @apply font-serif text-h4;
+  }
+
+  /* Manrope — mesmos valores em mobile e desktop */
+  .text-body {
+    @apply font-sans text-paragraph;
+  }
+  .text-label {
+    @apply font-sans text-span;
+  }
+  .text-cta {
+    @apply font-sans text-button;
+  }
+
+  /* Palavra em destaque dentro de titulos (Playfair italico) */
+  .font-serif-italic {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 600;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Comportamentos herdados do template
+   -------------------------------------------------------------------------- */
+
+/* Esconde scrollbar em carrosseis */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Acordeao de servicos */
+.service-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s ease-out;
+}
+/* visibility tira o painel fechado da ordem de tabulacao e da arvore de
+   acessibilidade; como e animada de forma discreta, so some no fim da
+   transicao de fechamento e volta na hora na abertura. */
+.service-content > div {
+  overflow: hidden;
+  visibility: hidden;
+  transition: visibility 0.4s ease-out;
+}
+.service-item.active .service-content {
+  grid-template-rows: 1fr;
+}
+.service-item.active .service-content > div {
+  visibility: visible;
+}
+.service-item.active .service-title {
+  color: var(--brand-third);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-content,
+  .service-content > div {
+    transition: none;
+  }
+}
+
+/* Lenis Smooth Scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Faixa animada de administradoras.
+   O conteudo e duplicado no JSX, entao -50% fecha o ciclo sem emenda. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 45s linear infinite;
+}
+/* WCAG 2.2.2 — conteudo em movimento precisa de um jeito de pausar. */
+.marquee-viewport:hover .marquee-track,
+.marquee-viewport:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Menu mobile */
+.mobile-menu {
+  transition: transform 0.3s ease-in-out;
+}
+.mobile-menu.open {
+  transform: translateX(0);
+}
