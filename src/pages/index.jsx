@@ -13,8 +13,11 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Empower - Business Consulting & Training</title>
-        <meta name="description" content="Expert strategic consulting to drive sustainable growth, operational innovation, and lasting business transformation." />
+        <title>RBS Consultoria Inteligente | Consórcio com estratégia</title>
+        <meta
+          name="description"
+          content="Consultoria estratégica em consórcios para construção de patrimônio: diagnóstico, escolha do grupo, estratégia de lance e acompanhamento até a contemplação."
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
