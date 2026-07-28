@@ -193,30 +193,6 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Faixa animada de administradoras.
-   O conteudo e duplicado no JSX, entao -50% fecha o ciclo sem emenda. */
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-.marquee-track {
-  animation: marquee 45s linear infinite;
-}
-/* WCAG 2.2.2 — conteudo em movimento precisa de um jeito de pausar. */
-.marquee-viewport:hover .marquee-track,
-.marquee-viewport:focus-within .marquee-track {
-  animation-play-state: paused;
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
-  }
-}
-
 /* Menu mobile */
 .mobile-menu {
   transition: transform 0.3s ease-in-out;

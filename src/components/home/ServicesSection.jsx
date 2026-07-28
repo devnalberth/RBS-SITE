@@ -49,7 +49,7 @@ function PillButton({ href, children, size = 'lg' }) {
   return (
     <a
       href={href}
-      className={`group inline-flex shrink-0 items-center rounded-full bg-accent py-1 text-base leading-6 tracking-[-0.02em] text-white transition-colors hover:bg-[#bd9541] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+      className={`group inline-flex shrink-0 self-start items-center rounded-full bg-accent py-1 text-base leading-6 tracking-[-0.02em] text-white transition-colors hover:bg-[#bd9541] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
         isLarge ? 'gap-3 pl-6 pr-1' : 'gap-2 pl-5 pr-1'
       }`}
     >
@@ -174,10 +174,10 @@ export default function ServicesSection() {
           {/* Imagem */}
           <div className="w-full overflow-hidden rounded-xl lg:max-w-[500px] lg:flex-1 lg:self-stretch">
             <img
-              src="/images/webp/home/section02.webp"
-              alt="Consultor da RBS analisando um plano de crédito em um tablet"
-              width={1122}
-              height={1402}
+              src="/images/webp/rodrigo/04.webp"
+              alt="Rodrigo Batista, fundador da RBS, no escritório"
+              width={2730}
+              height={4096}
               loading="lazy"
               className="aspect-[4/5] h-full w-full object-cover lg:aspect-auto lg:min-h-[541px]"
             />

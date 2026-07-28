@@ -3,12 +3,12 @@ export default function SobreSection() {
     <section id="sobre" className="scroll-mt-28 bg-primary px-6 py-20 md:py-[120px]">
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-12 lg:flex-row lg:justify-between lg:gap-16">
         <img
-          src="/images/webp/home/bio.webp"
-          alt="Rodrigo Batista, fundador da RBS Consultoria Inteligente"
-          width={662}
-          height={701}
+          src="/images/webp/rodrigo/03.webp"
+          alt="Retrato de Rodrigo Batista, fundador da RBS Consultoria Inteligente"
+          width={2730}
+          height={4096}
           loading="lazy"
-          className="w-full max-w-[662px] rounded-[20px] object-cover lg:h-[701px] lg:shrink-0"
+          className="w-full max-w-[662px] rounded-[20px] object-cover object-top lg:h-[701px] lg:shrink-0"
         />
 
         <div className="flex w-full flex-col gap-5 lg:w-[550px] lg:shrink-0">
