@@ -3,6 +3,7 @@ import HeroSection from "@/components/home/HeroSection";
 import ServicesSection from "@/components/home/ServicesSection";
 import MetodoSection from "@/components/home/MetodoSection";
 import ConsorciosSection from "@/components/home/ConsorciosSection";
+import InteligenciaSection from "@/components/home/InteligenciaSection";
 import AdministradorasSection from "@/components/home/AdministradorasSection";
 import ResultadosSection from "@/components/home/ResultadosSection";
 import SobreSection from "@/components/home/SobreSection";
@@ -23,14 +24,15 @@ export default function Home() {
       </Head>
       <main className="selection:bg-accent selection:text-white">
         {/* 01 */} <HeroSection />
-        {/* 02 */} <ServicesSection />
-        {/* 03 */} <MetodoSection />
-        {/* 04 */} <ConsorciosSection />
-        {/* 05 */} <AdministradorasSection />
-        {/* 06 */} <ResultadosSection />
-        {/* 07 */} <SobreSection />
-        {/* 08 */} <FaqSection />
-        {/* 09 */} <CtaSection />
+        {/* 02 */} <AdministradorasSection />
+        {/* 03 */} <ServicesSection />
+        {/* 04 */} <MetodoSection />
+        {/* 05 */} <ConsorciosSection />
+        {/* 06 */} <InteligenciaSection />
+        {/* 07 */} <ResultadosSection />
+        {/* 08 */} <SobreSection />
+        {/* 09 */} <FaqSection />
+        {/* 10 */} <CtaSection />
       </main>
     </>
   );

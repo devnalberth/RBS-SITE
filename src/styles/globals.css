@@ -193,6 +193,72 @@ html.lenis body {
   pointer-events: none;
 }
 
+/* Carrossel vertical de depoimentos.
+   O conteudo de cada coluna e duplicado no JSX, entao -50% fecha o ciclo. */
+@keyframes vmarquee-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+@keyframes vmarquee-down {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.vmarquee-track {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+@media (min-width: 1024px) {
+  .vmarquee-track {
+    animation: vmarquee-up 55s linear infinite;
+  }
+  .vmarquee-track--down {
+    animation-name: vmarquee-down;
+  }
+  .vmarquee:hover .vmarquee-track,
+  .vmarquee:focus-within .vmarquee-track {
+    animation-play-state: paused;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vmarquee {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .vmarquee-track {
+    animation: none !important;
+  }
+  .vmarquee-dup {
+    display: none !important;
+  }
+}
+
+/* Paginacao do carrossel de administradoras */
+.adm-dots .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background-color: var(--neutral-900);
+  opacity: 1;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.adm-dots .swiper-pagination-bullet-active {
+  background-color: var(--brand-secondary);
+}
+.adm-dots .swiper-pagination-bullet:focus-visible {
+  outline: 2px solid var(--brand-third);
+  outline-offset: 2px;
+}
+
 /* Menu mobile */
 .mobile-menu {
   transition: transform 0.3s ease-in-out;

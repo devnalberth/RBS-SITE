@@ -7,27 +7,27 @@ const ETAPAS = [
   {
     numeral: 'I',
     title: 'Diagnóstico financeiro',
-    text: 'Mapeamos sua realidade financeira, patrimônio atual, fluxo de caixa e capacidade de investimento mensal.',
+    text: 'Entendemos seu objetivo e analisamos sua realidade atual',
   },
   {
     numeral: 'II',
-    title: 'Mapeamento de grupos',
-    text: 'Identificamos os melhores grupos ativos nas administradoras parceiras, considerando taxa, prazo e perfil de contemplação.',
+    title: 'Planejamento Patrimonial',
+    text: 'Desenvolvemos a melhor estratégia para o seu objetivo',
   },
   {
     numeral: 'III',
-    title: 'Estratégia de lance',
-    text: 'Definimos o modelo de lance ideal — embutido, fixo ou híbrido — com projeção de contemplação personalizada.',
+    title: 'Escolha da Estratégia',
+    text: 'Definimos o grupo, valor, prazo e as melhores opções',
   },
   {
     numeral: 'IV',
-    title: 'Projeção de contemplação',
-    text: 'Simulamos cenários reais de contemplação baseados em dados históricos e comportamento dos grupos selecionados.',
+    title: 'Acompanhamento da Contemplação',
+    text: 'Monitoramos o processo e orientamos cada passo',
   },
   {
     numeral: 'V',
-    title: 'Gestão até contemplação',
-    text: 'Acompanhamento contínuo com ajustes estratégicos em lances, assembleias e oportunidades de antecipação.',
+    title: 'Suporte até a Utilização do Crédito',
+    text: 'Acompanhamos até a utilização do crédito com segurança',
   },
 ];
 
@@ -37,7 +37,7 @@ export default function MetodoSection() {
       <div className="mx-auto flex max-w-7xl flex-col gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
         {/* Texto — acompanha a rolagem ate o fim dos cards */}
         <div className="flex flex-col gap-4 lg:sticky lg:top-32 lg:w-[448px]">
-          <p className="text-xs uppercase leading-none">Exclusivo</p>
+          <p className="text-xs uppercase leading-none">COMO FUNCIONA</p>
 
           <h2 className="pt-4 font-serif text-h2-m md:text-h2">
             Método <span className="text-accent">RBS</span> de Estruturação

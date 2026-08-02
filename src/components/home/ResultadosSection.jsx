@@ -1,85 +1,118 @@
 const NUMEROS = [
   { value: 'R$ 200M+', label: 'em patrimônio planejado' },
-  { value: '500+', label: 'projetos estruturados' },
+  { value: '+60', label: 'clientes ativos' },
   { value: '92%', label: 'taxa de contemplação em 12 meses' },
   { value: '15+', label: 'anos de experiência' },
 ];
 
-const DEPOIMENTOS = [
+const PARCEIROS = [
   {
+    name: 'Carlos Henrique Martins',
+    role: 'Escritório Parceiro • Curitiba/PR',
     quote:
-      'A consultoria do Rodrigo mudou completamente minha visão sobre consórcio. Fui contemplado em 8 meses com uma estratégia de lance que eu jamais teria pensado sozinho.',
-    initials: 'M.C.',
-    role: 'Investidor imobiliário',
-    result: 'Contemplado em 8 meses',
+      'O maior diferencial da RBS não é apenas o comissionamento, mas o suporte. Sempre que preciso estruturar uma operação, montar uma estratégia ou resolver alguma situação com a administradora, sei que posso contar com o Rodrigo e sua equipe.',
   },
   {
+    name: 'Marcelo Gonçalves',
+    role: 'Representante Comercial • Londrina/PR',
     quote:
-      'O acompanhamento é o diferencial. A cada assembleia eu recebia a orientação do que fazer — nunca fiquei no escuro.',
-    initials: 'T.A.',
-    role: 'Dentista',
-    result: '2 cartas contempladas',
+      'Antes da parceria, nosso escritório vendia consórcio sem um processo definido. Hoje temos apoio comercial, operacional e estratégico, o que trouxe muito mais segurança para crescer.',
   },
   {
+    name: 'Felipe Andrade',
+    role: 'Consultor de Consórcios • São José dos Campos/SP',
     quote:
-      'Renovamos toda a frota da empresa sem comprometer o caixa. O planejamento foi impecável e o acompanhamento, do início ao fim.',
-    initials: 'R.S.',
-    role: 'Empresário, setor logístico',
-    result: 'Frota renovada em 14 meses',
+      'O Rodrigo realmente acompanha o parceiro. Não é aquele credenciamento onde você fica sozinho. Sempre existe alguém para orientar, ajudar nas negociações e encontrar a melhor solução para o cliente.',
   },
   {
+    name: 'Ricardo Nunes',
+    role: 'Consultor Credenciado • Cascavel/PR',
     quote:
-      'Trocamos duas máquinas da linha de produção sem tirar capital de giro do negócio.',
-    initials: 'L.B.',
-    role: 'Sócio, indústria de embalagens',
-    result: 'Maquinário renovado',
+      'Em poucos meses consegui aumentar meu faturamento porque passei a trabalhar com estratégias muito mais inteligentes. A consultoria da RBS fez toda diferença na minha evolução.',
   },
   {
+    name: 'Eduardo Moraes',
+    role: 'Proprietário de Escritório • Balneário Camboriú/SC',
     quote:
-      'Sempre achei consórcio uma furada, até entender a abordagem estratégica da RBS. Hoje tenho 3 cartas em operação como parte do meu planejamento patrimonial.',
-    initials: 'A.L.',
-    role: 'Médico, investidor',
-    result: '3 cartas estruturadas',
-  },
-  {
-    quote:
-      'Comprei o terreno e comecei a obra com o crédito da carta. Sem entrada, sem juros e com a parcela cabendo no orçamento.',
-    initials: 'P.F.',
-    role: 'Engenheiro civil',
-    result: 'Terreno e obra em 18 meses',
+      'Além das melhores oportunidades comerciais, a RBS entrega organização, treinamento e acompanhamento constante. É uma parceria construída para quem quer crescer de verdade.',
   },
 ];
 
-// Distribuicao em 3 colunas, como no wireframe: as colunas 2 e 3 descem 24px.
-const COLUNAS = [
-  [DEPOIMENTOS[0], DEPOIMENTOS[1]],
-  [DEPOIMENTOS[2], DEPOIMENTOS[3]],
-  [DEPOIMENTOS[4], DEPOIMENTOS[5]],
+const CLIENTES = [
+  {
+    name: 'Fernanda Oliveira',
+    role: 'Empresária • Curitiba/PR',
+    quote:
+      'Recebi uma consultoria completa antes mesmo de falar em proposta. O Rodrigo mostrou diferentes cenários, explicou cada detalhe e me ajudou a tomar uma decisão com muita segurança.',
+  },
+  {
+    name: 'João Paulo Mendes',
+    role: 'Produtor Rural • Campo Mourão/PR',
+    quote:
+      'Não procurava apenas uma carta de crédito. Procurava alguém que entendesse de estratégia financeira. O atendimento foi extremamente profissional e personalizado.',
+  },
+  {
+    name: 'Patrícia Carvalho',
+    role: 'Médica • Maringá/PR',
+    quote:
+      'Fiquei impressionada com a transparência durante todo o atendimento. Todas as possibilidades foram apresentadas de forma clara e sem qualquer pressão para fechar negócio.',
+  },
+  {
+    name: 'Gustavo Ribeiro',
+    role: 'Empresário • Joinville/SC',
+    quote:
+      'A consultoria foi muito além da contratação do consórcio. O Rodrigo estruturou uma estratégia que fazia sentido para meu planejamento patrimonial. Recomendo pelo profissionalismo e conhecimento.',
+  },
+  {
+    name: 'Luciana Almeida',
+    role: 'Investidora • Curitiba/PR',
+    quote:
+      'Desde o primeiro contato percebi um atendimento diferenciado. Tudo foi explicado com muita clareza, e em nenhum momento senti que estavam apenas tentando vender um produto. Foi uma verdadeira consultoria.',
+  },
 ];
+
+const DEPOIMENTOS = PARCEIROS.flatMap((parceiro, i) =>
+  [
+    { ...parceiro, tipo: 'Parceiro' },
+    CLIENTES[i] && { ...CLIENTES[i], tipo: 'Cliente' },
+  ].filter(Boolean)
+);
+
+const COLUNAS = [0, 1, 2].map((coluna) => DEPOIMENTOS.filter((_, i) => i % 3 === coluna));
+
+const VELOCIDADES = ['55s', '68s', '61s'];
+
+const iniciais = (nome) =>
+  nome
+    .split(' ')
+    .slice(0, 2)
+    .map((p) => p[0])
+    .join('');
 
 function Depoimento({ item }) {
   return (
     <figure className="rounded-2xl bg-gray-50 p-8">
-      <span aria-hidden="true" className="block font-serif text-2xl leading-8 text-gray-400">
-        &ldquo;
-      </span>
+      <div className="flex items-start justify-between gap-4">
+        <span aria-hidden="true" className="font-serif text-2xl leading-8 text-gray-400">
+          &ldquo;
+        </span>
+        <span className="rounded-full bg-primary/5 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary">
+          {item.tipo}
+        </span>
+      </div>
 
       <blockquote className="pt-3 text-base font-medium leading-6 text-gray-700">
         {item.quote}
       </blockquote>
 
-      <p className="mt-5 text-xs font-bold uppercase tracking-wide text-primary">
-        <span aria-hidden="true" className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-accent align-middle" />
-        {item.result}
-      </p>
-
-      {/* Depoimentos sao anonimos: o circulo com as iniciais faz as vezes do
-          avatar e do nome, entao a legenda ao lado leva so o perfil. */}
-      <figcaption className="mt-5 flex items-center gap-3">
+      <figcaption className="mt-6 flex items-center gap-3">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
-          {item.initials}
+          {iniciais(item.name)}
         </span>
-        <span className="text-sm leading-5 text-gray-500">{item.role}</span>
+        <span>
+          <span className="block text-sm font-bold leading-5 text-primary">{item.name}</span>
+          <span className="block text-xs leading-4 text-gray-500">{item.role}</span>
+        </span>
       </figcaption>
     </figure>
   );
@@ -108,17 +141,28 @@ export default function ResultadosSection() {
           ))}
         </dl>
 
-        <div className="flex flex-col gap-6 pt-16 lg:flex-row lg:items-start">
-          {COLUNAS.map((coluna, index) => (
-            <div
-              key={coluna[0].initials}
-              className={`flex flex-1 flex-col gap-6 ${index > 0 ? 'lg:pt-6' : ''}`}
-            >
-              {coluna.map((item) => (
-                <Depoimento key={item.initials} item={item} />
-              ))}
-            </div>
-          ))}
+        <div className="relative mt-16">
+          <div className="vmarquee grid grid-cols-1 gap-6 lg:h-[680px] lg:grid-cols-3 lg:overflow-hidden">
+            {COLUNAS.map((coluna, index) => (
+              <div
+                key={coluna[0].name}
+                className={`vmarquee-track ${index === 1 ? 'vmarquee-track--down' : ''}`}
+                style={{ animationDuration: VELOCIDADES[index] }}
+              >
+                {coluna.map((item) => (
+                  <Depoimento key={item.name} item={item} />
+                ))}
+                <div className="vmarquee-dup hidden lg:contents" aria-hidden="true">
+                  {coluna.map((item) => (
+                    <Depoimento key={`${item.name}-dup`} item={item} />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="pointer-events-none absolute inset-x-0 top-0 hidden h-24 bg-gradient-to-b from-white to-transparent lg:block" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-24 bg-gradient-to-t from-white to-transparent lg:block" />
         </div>
       </div>
     </section>
