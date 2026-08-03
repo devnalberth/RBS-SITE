@@ -7,11 +7,6 @@ const REDES = [
   { name: 'Instagram', icon: '/icons/Instagram.svg', href: 'https://www.instagram.com/' },
 ];
 
-const LEGAIS = [
-  { label: 'Política de Privacidade', href: '/privacy' },
-  { label: 'Termos de Uso', href: '/terms' },
-];
-
 export default function Footer() {
   const router = useRouter();
 
@@ -86,18 +81,14 @@ export default function Footer() {
               © 2026 RBS Consultoria Inteligente. Todos os direitos reservados.
             </p>
 
-            <ul className="flex flex-wrap gap-4">
-              {LEGAIS.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-xs leading-4 text-white/30 transition-colors hover:text-white/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <a
+              href="https://www.instagram.com/nalberthweb/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs leading-4 text-white/30 transition-colors hover:text-white/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+            >
+              Site desenvolvido por @nalberthweb
+            </a>
           </div>
         </div>
       </div>

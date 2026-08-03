@@ -3,23 +3,28 @@ import { Pagination, A11y } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
+// Dimensoes exatas do Figma (dev mode): as tres logos tem 92px de altura,
+// cada uma com a largura que preserva sua proporcao original.
 const ADMINISTRADORAS = [
   {
     name: 'Consórcio Embracon',
     file: 'embracon',
-    logo: 'h-[190px]',
+    width: 198,
+    height: 92,
     text: 'A maior administradora de consórcios do Brasil. Tradição, solidez e excelência.',
   },
   {
     name: 'Consórcio Volkswagen',
     file: 'volkswagen',
-    logo: 'h-[200px]',
+    width: 338,
+    height: 92,
     text: 'A escolha inteligente para realizar seus planos com segurança e eficiência.',
   },
   {
     name: 'Bradesco Consórcios',
     file: 'bradesco',
-    logo: 'h-[142px]',
+    width: 213,
+    height: 92,
     text: 'A solidez do Bradesco com a flexibilidade e vantagens do consórcio.',
   },
 ];
@@ -47,12 +52,15 @@ export default function AdministradorasSection() {
             {ADMINISTRADORAS.map((item) => (
               <SwiperSlide key={item.file} className="!h-auto">
                 <article className="flex h-full min-h-[258px] flex-col items-center justify-between gap-4 rounded-[14px] border-[0.5px] border-primary bg-white px-[30px] py-5">
-                  <div className="flex h-[120px] w-full items-center justify-center overflow-hidden">
+                  <div className="flex h-[92px] w-full items-center justify-center">
                     <img
-                      src={`/images/webp/administradoras/${item.file}.webp`}
+                      src={`/icons/${item.file}.svg`}
                       alt={item.name}
+                      width={item.width}
+                      height={item.height}
                       loading="lazy"
-                      className={`w-auto max-w-none ${item.logo}`}
+                      className="block w-auto shrink-0"
+                      style={{ width: item.width, height: item.height }}
                     />
                   </div>
 

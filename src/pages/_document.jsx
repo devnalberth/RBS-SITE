@@ -12,6 +12,8 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,600&display=swap"
           rel="stylesheet"
         />
+        <link rel="icon" href="/icons/rbsfavicon.svg" type="image/svg+xml" />
+        <link rel="alternate icon" href="/favicon.ico" />
       </Head>
       <body className="antialiased bg-brand-secondary text-color-white">
         <Main />

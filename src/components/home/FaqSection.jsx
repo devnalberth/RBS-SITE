@@ -55,8 +55,9 @@ export default function FaqSection() {
   return (
     <section id="faq" className="scroll-mt-28 mt-10 border-t border-gray-100 bg-white px-6 py-24 text-primary">
       <div className="mx-auto flex max-w-7xl flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
-        {/* Titulo + CTA */}
-        <div className="lg:flex-1">
+        {/* Titulo + CTA — acompanha a rolagem ate o fim das perguntas,
+            mesmo tratamento da coluna de texto do Metodo. */}
+        <div className="lg:sticky lg:top-32 lg:flex-1">
           <h2 className="max-w-[522px] font-serif text-h2-m md:text-h2">
             Tudo que você precisa saber sobre consórcio estratégico.
           </h2>

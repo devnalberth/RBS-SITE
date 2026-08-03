@@ -19,18 +19,18 @@ export default function SobreSection() {
             </span>
           </p>
 
-          <h2 className="font-serif text-h2-m text-white md:text-h2">Rodrigo Batista</h2>
+          <h2 className="font-serif text-h2-m text-white md:text-h2">Rodrigo Batista da Silva</h2>
 
           <div className="flex flex-col gap-[38px] text-paragraph text-white/80">
-            <p className="max-w-[399px]">Consórcio com visão, método e direção patrimonial</p>
+            <p className="max-w-[399px]">Fundador e Especialista em Consórcios</p>
             <p>
-              Especialista em estruturação de consórcios como ferramenta de construção patrimonial,
-              Rodrigo desenvolveu uma abordagem consultiva que transforma o consórcio em instrumento
-              estratégico de planejamento financeiro.
+              Mais de 16 anos de experiência no mercado financeiro, com a Comercial Prime, liderando
+              grandes equipes e conquistando resultados expressivos em todo o Brasil.
             </p>
             <p>
-              Sua metodologia combina análise de perfil, mapeamento de oportunidades e acompanhamento
-              personalizado — sempre com foco em resultados de longo prazo.
+              Especialista em estratégias patrimoniais com consórcios, já ajudou empresários,
+              investidores e famílias a conquistarem seus objetivos com segurança, planejamento e
+              inteligência.
             </p>
           </div>
 
@@ -38,7 +38,7 @@ export default function SobreSection() {
             href="/contact"
             className="inline-flex items-center justify-center self-start rounded-[99px] bg-accent px-[35px] py-5 text-base font-extrabold uppercase leading-4 tracking-[-0.1px] text-white transition-colors hover:bg-[#bd9541] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
           >
-            Saiba mais sobre o Rodrigo
+            Conhecer mais sobre o Rodrigo
           </a>
         </div>
       </div>

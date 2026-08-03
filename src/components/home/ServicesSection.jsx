@@ -94,7 +94,7 @@ export default function ServicesSection() {
           <PillButton href="/contact">Saber Mais</PillButton>
         </div>
 
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between lg:gap-16 xl:gap-20">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-16 xl:gap-20">
           {/* Acordeao de modalidades */}
           <div className="flex w-full flex-col gap-6 lg:max-w-[580px] lg:flex-1">
             {MODALIDADES.map((modalidade, index) => {
@@ -113,14 +113,19 @@ export default function ServicesSection() {
                     <button
                       type="button"
                       id={buttonId}
-                      onClick={() => setOpenId(isOpen ? null : modalidade.id)}
+                      onClick={() => {
+                        // Sempre uma modalidade aberta: clicar na que ja
+                        // esta aberta nao fecha (senao a imagem ao lado
+                        // perde a altura de referencia do acordeao).
+                        if (!isOpen) setOpenId(modalidade.id);
+                      }}
                       aria-expanded={isOpen}
                       aria-controls={panelId}
                       className="flex w-full items-center justify-between gap-4 pr-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
                     >
                       <span className="flex flex-col gap-2.5">
                         <span className="font-serif text-h4">{modalidade.title}</span>
-                        <span className="text-sm font-normal leading-[22px] text-muted">
+                        <span className="font-sans text-sm font-normal leading-[22px] text-muted">
                           {modalidade.from}
                         </span>
                       </span>
@@ -141,7 +146,7 @@ export default function ServicesSection() {
                   <div className="service-content" id={panelId} role="region" aria-labelledby={buttonId}>
                     <div>
                       <div className="flex flex-col items-start gap-5">
-                        <p className="text-[2rem] font-bold leading-9">{modalidade.price}</p>
+                        <p className="font-sans text-[2rem] font-bold leading-9">{modalidade.price}</p>
 
                         <ul className="flex flex-col gap-4">
                           {modalidade.items.map((item) => (
@@ -171,15 +176,19 @@ export default function ServicesSection() {
             })}
           </div>
 
-          {/* Imagem */}
-          <div className="w-full overflow-hidden rounded-xl lg:max-w-[500px] lg:flex-1 lg:self-stretch">
+          {/* Imagem — acompanha a altura real do acordeao (self-stretch).
+              A img vira position:absolute a partir de lg para sair do fluxo
+              do flex: sem isso, a proporcao intrinseca do arquivo (2730x4096)
+              e usada no calculo de altura da linha ANTES do stretch, inflando
+              a linha inteira para ~750px mesmo com o acordeao mais baixo. */}
+          <div className="relative w-full overflow-hidden rounded-xl lg:max-w-[500px] lg:flex-1 lg:self-stretch">
             <img
               src="/images/webp/rodrigo/04.webp"
               alt="Rodrigo Batista, fundador da RBS, no escritório"
               width={2730}
               height={4096}
               loading="lazy"
-              className="aspect-[4/5] h-full w-full object-cover lg:aspect-auto lg:min-h-[541px]"
+              className="aspect-[4/5] h-full w-full object-cover lg:absolute lg:inset-0 lg:aspect-auto"
             />
           </div>
         </div>

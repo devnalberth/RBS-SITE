@@ -20,7 +20,6 @@ export default function Home() {
           content="Consultoria estratégica em consórcios para construção de patrimônio: diagnóstico, escolha do grupo, estratégia de lance e acompanhamento até a contemplação."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="selection:bg-accent selection:text-white">
         {/* 01 */} <HeroSection />
