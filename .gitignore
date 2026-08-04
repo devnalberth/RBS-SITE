@@ -27,3 +27,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# referencias visuais (nao entram no versionamento)
+/_archive/referencias/
