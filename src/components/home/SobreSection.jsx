@@ -1,7 +1,7 @@
 export default function SobreSection() {
   return (
     <section id="sobre" className="scroll-mt-28 bg-primary px-6 py-20 md:py-[120px]">
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-12 lg:flex-row lg:justify-between lg:gap-16">
+      <div className="gs-stagger mx-auto flex max-w-7xl flex-col items-center gap-12 lg:flex-row lg:justify-between lg:gap-16">
         <img
           src="/images/webp/rodrigo/03.webp"
           alt="Retrato de Rodrigo Batista, fundador da RBS Consultoria Inteligente"
@@ -14,23 +14,37 @@ export default function SobreSection() {
         <div className="flex w-full flex-col gap-5 lg:w-[550px] lg:shrink-0">
           <p className="flex items-center gap-2.5">
             <span aria-hidden="true" className="h-px w-6 shrink-0 bg-white" />
-            <span className="font-serif text-xs uppercase leading-none text-[#faf9f7]">
+            <span className="font-sans text-xs uppercase leading-none text-[#faf9f7]">
               Sobre o fundador
             </span>
           </p>
 
-          <h2 className="font-serif text-h2-m text-white md:text-h2">Rodrigo Batista da Silva</h2>
+          <h2 className="font-sans text-h2-m text-white md:text-h2">Rodrigo Batista da Silva</h2>
 
           <div className="flex flex-col gap-[38px] text-paragraph text-white/80">
-            <p className="max-w-[399px]">Fundador e Especialista em Consórcios</p>
-            <p>
-              Mais de 16 anos de experiência no mercado financeiro, com a Comercial Prime, liderando
-              grandes equipes e conquistando resultados expressivos em todo o Brasil.
+            <p className="max-w-[399px]">
+              Fundador | Especialista em Consórcios e Estratégias de Negócios
             </p>
             <p>
-              Especialista em estratégias patrimoniais com consórcios, já ajudou empresários,
-              investidores e famílias a conquistarem seus objetivos com segurança, planejamento e
-              inteligência.
+              Mais de 15 anos de experiência no mercado financeiro, construindo uma trajetória
+              marcada por liderança comercial, gestão de equipes e resultados de alta performance em
+              diferentes mercados e regiões do Brasil.
+            </p>
+            <p>
+              Ao longo da carreira, atuou diretamente na formação e desenvolvimento de profissionais,
+              estruturação de estratégias comerciais e expansão de negócios, acumulando profundo
+              conhecimento sobre vendas, relacionamento, gestão e soluções financeiras.
+            </p>
+            <p>
+              Hoje, à frente da RBS, aplica toda essa experiência no mercado de consórcios, apoiando
+              clientes, representantes e donos de escritórios na construção de estratégias mais
+              sólidas, profissionais e sustentáveis.
+            </p>
+            <p>
+              Seu trabalho une visão estratégica, conhecimento de mercado e proximidade comercial,
+              oferecendo suporte tanto para quem busca utilizar o consórcio como ferramenta de
+              planejamento patrimonial quanto para profissionais que desejam crescer, estruturar e
+              escalar suas operações de consórcio.
             </p>
           </div>
 

@@ -84,7 +84,7 @@ export default function Navbar() {
             />
           </Link>
 
-          <div className="hidden lg:flex space-x-8 items-center text-sm leading-5 font-medium text-primary">
+          <div className="hidden xl:flex space-x-8 items-center text-sm leading-5 font-medium text-primary">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
@@ -101,7 +101,7 @@ export default function Navbar() {
           <div className="flex items-center gap-4 relative z-50">
             <Link
               href="/contact"
-              className="group hidden items-center gap-3 rounded-full bg-primary py-2 pl-5 pr-2 text-sm font-bold leading-5 text-white transition-colors hover:bg-accent lg:flex"
+              className="group hidden items-center gap-3 rounded-full bg-primary py-2 pl-5 pr-2 text-sm font-bold leading-5 text-white transition-colors hover:bg-accent xl:flex"
             >
               Fale com Especialista
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-primary transition-colors group-hover:text-accent">
@@ -110,7 +110,7 @@ export default function Navbar() {
             </Link>
             <button
               onClick={toggleMenu}
-              className="lg:hidden text-primary p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="xl:hidden text-primary p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
               aria-expanded={menuOpen}
             >
@@ -122,7 +122,7 @@ export default function Navbar() {
 
       {/* Menu mobile */}
       <div
-        className={`fixed inset-0 bg-white z-40 transform lg:hidden flex flex-col pt-24 px-6 pb-6 overflow-y-auto mobile-menu ${
+        className={`fixed inset-0 bg-white z-40 transform xl:hidden flex flex-col pt-24 px-6 pb-6 overflow-y-auto mobile-menu ${
           menuOpen ? 'open' : 'translate-x-full'
         }`}
         aria-hidden={!menuOpen}

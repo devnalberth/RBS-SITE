@@ -10,7 +10,7 @@ const BENEFICIOS = [
 
 export default function CtaSection() {
   return (
-    <section className="gs-reveal px-6 py-10">
+    <section id="parceiro" className="gs-reveal scroll-mt-28 px-6 py-10">
       <div className="mx-auto flex max-w-7xl flex-col overflow-hidden rounded-[40px] bg-primary lg:min-h-[526px] lg:flex-row lg:items-stretch">
         <div className="flex flex-col justify-center p-8 md:p-16 lg:w-1/2">
           <div className="flex flex-col items-start gap-6">
@@ -18,7 +18,7 @@ export default function CtaSection() {
               Seja um Parceiro RBS
             </p>
 
-            <h2 className="max-w-[440px] font-serif text-h3-m text-white md:text-h3">
+            <h2 className="max-w-[440px] font-sans text-h3-m text-white md:text-h3">
               Tenha ao seu lado uma estrutura completa para vender mais e crescer com segurança.
             </h2>
 

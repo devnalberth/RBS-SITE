@@ -82,7 +82,7 @@ export default function ServicesSection() {
         {/* Titulo + CTA */}
         <div className="gs-reveal flex flex-col gap-8 md:flex-row md:items-end md:justify-between md:gap-10">
           <div className="flex flex-col gap-5">
-            <h2 className="max-w-[739px] font-serif text-h2-m md:text-h2">
+            <h2 className="max-w-[739px] font-sans text-h2-m md:text-h2">
               Conheça as modalidades de créditos
             </h2>
             <p className="max-w-[461px] text-paragraph text-muted">
@@ -94,7 +94,7 @@ export default function ServicesSection() {
           <PillButton href="/contact">Saber Mais</PillButton>
         </div>
 
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-16 xl:gap-20">
+        <div className="gs-stagger flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-16 xl:gap-20">
           {/* Acordeao de modalidades */}
           <div className="flex w-full flex-col gap-6 lg:max-w-[580px] lg:flex-1">
             {MODALIDADES.map((modalidade, index) => {
@@ -124,7 +124,7 @@ export default function ServicesSection() {
                       className="flex w-full items-center justify-between gap-4 pr-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
                     >
                       <span className="flex flex-col gap-2.5">
-                        <span className="font-serif text-h4">{modalidade.title}</span>
+                        <span className="font-sans text-h4">{modalidade.title}</span>
                         <span className="font-sans text-sm font-normal leading-[22px] text-muted">
                           {modalidade.from}
                         </span>

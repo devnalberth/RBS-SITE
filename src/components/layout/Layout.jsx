@@ -43,14 +43,26 @@ export default function Layout({ children }) {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const revealElements = document.querySelectorAll('.gs-reveal');
+    const staggerGroups = document.querySelectorAll('.gs-stagger');
+    const staggerChildren = [...staggerGroups].flatMap((group) => [...group.children]);
 
     if (prefersReducedMotion) {
-      gsap.set(revealElements, { y: 0, opacity: 1, clearProps: 'transform' });
+      gsap.set([...revealElements, ...staggerChildren], {
+        y: 0,
+        opacity: 1,
+        clearProps: 'transform',
+      });
       return () => {
         if (lenis) lenis.destroy();
         delete window.__lenis;
       };
     }
+
+    const trigger = (elem) => ({
+      trigger: elem,
+      start: 'top 85%',
+      toggleActions: 'play none none none',
+    });
 
     revealElements.forEach((elem) => {
       gsap.fromTo(
@@ -61,11 +73,23 @@ export default function Layout({ children }) {
           opacity: 1,
           duration: 1,
           ease: 'power3.out',
-          scrollTrigger: {
-            trigger: elem,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-          },
+          scrollTrigger: trigger(elem),
+        }
+      );
+    });
+
+    // Entrada em cascata: os filhos diretos do container entram em sequencia.
+    staggerGroups.forEach((group) => {
+      gsap.fromTo(
+        group.children,
+        { y: 32, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.7,
+          ease: 'power3.out',
+          stagger: 0.12,
+          scrollTrigger: trigger(group),
         }
       );
     });

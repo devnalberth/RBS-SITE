@@ -57,8 +57,8 @@ export default function FaqSection() {
       <div className="mx-auto flex max-w-7xl flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
         {/* Titulo + CTA — acompanha a rolagem ate o fim das perguntas,
             mesmo tratamento da coluna de texto do Metodo. */}
-        <div className="lg:sticky lg:top-32 lg:flex-1">
-          <h2 className="max-w-[522px] font-serif text-h2-m md:text-h2">
+        <div className="gs-reveal lg:sticky lg:top-32 lg:flex-1">
+          <h2 className="max-w-[522px] font-sans text-h2-m md:text-h2">
             Tudo que você precisa saber sobre consórcio estratégico.
           </h2>
 
@@ -81,7 +81,7 @@ export default function FaqSection() {
         </div>
 
         {/* Acordeao */}
-        <div className="w-full lg:w-[720px] lg:shrink-0">
+        <div className="gs-reveal w-full lg:w-[720px] lg:shrink-0">
           {PERGUNTAS.map((item, index) => {
             const isOpen = openId === item.id;
             const panelId = `faq-${item.id}`;

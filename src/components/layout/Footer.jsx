@@ -3,8 +3,16 @@ import { useRouter } from 'next/router';
 import { NAV_LINKS, scrollToAnchor } from './navLinks';
 
 const REDES = [
-  { name: 'LinkedIn', icon: '/icons/Linkedin.svg', href: 'https://www.linkedin.com/' },
-  { name: 'Instagram', icon: '/icons/Instagram.svg', href: 'https://www.instagram.com/' },
+  {
+    name: 'LinkedIn',
+    icon: '/icons/Linkedin.svg',
+    href: 'https://www.linkedin.com/in/rodrigo-batista-rbs/',
+  },
+  {
+    name: 'Instagram',
+    icon: '/icons/Instagram.svg',
+    href: 'https://www.instagram.com/rodrigobatista.consorcio',
+  },
 ];
 
 export default function Footer() {

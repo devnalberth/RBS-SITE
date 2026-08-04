@@ -93,7 +93,7 @@ function Depoimento({ item }) {
   return (
     <figure className="rounded-2xl bg-gray-50 p-8">
       <div className="flex items-start justify-between gap-4">
-        <span aria-hidden="true" className="font-serif text-2xl leading-8 text-gray-400">
+        <span aria-hidden="true" className="font-sans text-2xl leading-8 text-gray-400">
           &ldquo;
         </span>
         <span className="rounded-full bg-primary/5 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary">
@@ -122,14 +122,14 @@ export default function ResultadosSection() {
   return (
     <section id="resultados" className="scroll-mt-28 bg-white px-6 py-20 text-primary">
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col items-center">
+        <div className="gs-reveal flex flex-col items-center">
           <p className="text-center text-base leading-6 text-gray-500">Resultados Reais</p>
-          <h2 className="max-w-[896px] text-center font-serif text-h2-m md:text-h2">
+          <h2 className="max-w-[896px] text-center font-sans text-h2-m md:text-h2">
             Quem confia na RBS transforma objetivos em patrimônio
           </h2>
         </div>
 
-        <dl className="grid grid-cols-1 gap-3 pt-16 sm:grid-cols-2 lg:grid-cols-4">
+        <dl className="gs-stagger grid grid-cols-1 gap-3 pt-16 sm:grid-cols-2 lg:grid-cols-4">
           {NUMEROS.map((item) => (
             <div
               key={item.label}

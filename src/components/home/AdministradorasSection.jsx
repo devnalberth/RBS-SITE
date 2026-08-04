@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, A11y } from 'swiper/modules';
+import { Autoplay, Pagination, A11y } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -29,28 +29,40 @@ const ADMINISTRADORAS = [
   },
 ];
 
+// O loop do Swiper exige ao menos slidesPerView * 2 slides. Sao 3 cards e
+// 3 por tela no desktop, entao a lista entra duplicada — sem isso o Swiper
+// desativa o loop e o autoplay trava no ultimo slide.
+const SLIDES = [...ADMINISTRADORAS, ...ADMINISTRADORAS];
+
 export default function AdministradorasSection() {
   return (
     <section id="administradoras" className="scroll-mt-28 bg-white px-6 py-24 text-primary">
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-5">
+      <div className="gs-stagger mx-auto flex max-w-7xl flex-col items-center gap-5">
         <p className="text-center text-paragraph uppercase text-accent">Representação Master</p>
 
-        <h2 className="max-w-[900px] text-center font-serif text-2xl leading-[1.1] tracking-[-0.9px] md:text-[36px]">
+        <h2 className="max-w-[900px] text-center font-sans text-2xl leading-[1.1] tracking-[-0.9px] md:text-[36px]">
           Trabalhamos com as melhores administradoras do mercado.
         </h2>
 
         <div className="w-full pt-6">
           <Swiper
-            modules={[Pagination, A11y]}
+            modules={[Autoplay, Pagination, A11y]}
             spaceBetween={20}
             slidesPerView={1}
             breakpoints={{ 640: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }}
+            loop
+            autoplay={{ delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            onSwiper={(swiper) => {
+              if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                swiper.autoplay?.stop();
+              }
+            }}
             pagination={{ clickable: true, el: '.adm-dots' }}
             a11y={{ containerMessage: 'Administradoras parceiras' }}
             className="!px-1 !pb-2"
           >
-            {ADMINISTRADORAS.map((item) => (
-              <SwiperSlide key={item.file} className="!h-auto">
+            {SLIDES.map((item, index) => (
+              <SwiperSlide key={`${item.file}-${index}`} className="!h-auto">
                 <article className="flex h-full min-h-[258px] flex-col items-center justify-between gap-4 rounded-[14px] border-[0.5px] border-primary bg-white px-[30px] py-5">
                   <div className="flex h-[92px] w-full items-center justify-center">
                     <img

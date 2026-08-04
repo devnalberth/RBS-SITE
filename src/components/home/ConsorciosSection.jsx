@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, A11y } from 'swiper/modules';
+import { Autoplay, Navigation, A11y } from 'swiper/modules';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import 'swiper/css';
 
@@ -37,22 +37,19 @@ const CONSORCIOS = [
   },
 ];
 
+// Lista duplicada para o loop do Swiper ter slides suficientes com
+// slidesPerView "auto" — sem isso o loop e desativado e o autoplay para.
+const SLIDES = [...CONSORCIOS, ...CONSORCIOS];
+
 export default function ConsorciosSection() {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  const [isBeginning, setIsBeginning] = useState(true);
-  const [isEnd, setIsEnd] = useState(false);
-
-  const syncEdges = (swiper) => {
-    setIsBeginning(swiper.isBeginning);
-    setIsEnd(swiper.isEnd);
-  };
 
   return (
     <section id="consorcios" className="scroll-mt-28 bg-white px-6 py-24 text-primary">
       <div className="mx-auto max-w-[1400px]">
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-          <h2 className="max-w-[576px] font-serif text-h2-m md:text-h2">
+        <div className="gs-reveal flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="max-w-[576px] font-sans text-h2-m md:text-h2">
             Encontre a solução <span className="block text-accent">ideal para você</span>
           </h2>
 
@@ -60,18 +57,16 @@ export default function ConsorciosSection() {
             <button
               ref={prevRef}
               type="button"
-              disabled={isBeginning}
               aria-label="Ver modalidade anterior"
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-[#d1d5db] transition-opacity hover:bg-light disabled:opacity-40 disabled:hover:bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-[#d1d5db] transition-opacity hover:bg-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               <ArrowLeft className="h-5 w-5" aria-hidden="true" />
             </button>
             <button
               ref={nextRef}
               type="button"
-              disabled={isEnd}
               aria-label="Ver próxima modalidade"
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-white transition-opacity hover:bg-[#bd9541] disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-white transition-opacity hover:bg-[#bd9541] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               <ArrowRight className="h-5 w-5" aria-hidden="true" />
             </button>
@@ -80,9 +75,11 @@ export default function ConsorciosSection() {
 
         <div className="pt-12">
           <Swiper
-            modules={[Navigation, A11y]}
+            modules={[Autoplay, Navigation, A11y]}
             slidesPerView="auto"
             spaceBetween={24}
+            loop
+            autoplay={{ delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true }}
             navigation={{ prevEl: prevRef.current, nextEl: nextRef.current }}
             a11y={{
               containerMessage: 'Modalidades de consórcio',
@@ -94,13 +91,18 @@ export default function ConsorciosSection() {
               swiper.params.navigation.prevEl = prevRef.current;
               swiper.params.navigation.nextEl = nextRef.current;
             }}
-            onSwiper={syncEdges}
-            onSlideChange={syncEdges}
-            onResize={syncEdges}
+            onSwiper={(swiper) => {
+              if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                swiper.autoplay?.stop();
+              }
+            }}
             className="!overflow-hidden"
           >
-            {CONSORCIOS.map((consorcio) => (
-              <SwiperSlide key={consorcio.title} className="!h-[400px] !w-[300px] sm:!w-[360px]">
+            {SLIDES.map((consorcio, index) => (
+              <SwiperSlide
+                key={`${consorcio.title}-${index}`}
+                className="!h-[400px] !w-[300px] sm:!w-[360px]"
+              >
                 <article className="relative h-[400px] overflow-hidden rounded-3xl shadow-sm">
                   <img
                     src={consorcio.img}

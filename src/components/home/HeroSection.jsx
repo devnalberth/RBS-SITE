@@ -54,7 +54,7 @@ export default function HeroSection() {
         </div>
 
         <div className="relative z-20 -mt-8 px-2 md:-mt-12 md:px-0">
-          <div className="mx-auto flex max-w-7xl flex-col gap-6 rounded-[20px] border border-primary bg-white px-6 py-4 shadow-[0_1px_1px_rgba(0,0,0,0.05)] md:flex-row md:items-center md:justify-between">
+          <div className="mx-auto flex max-w-7xl flex-col gap-6 rounded-[20px] border border-primary bg-white px-6 py-7 shadow-[0_1px_1px_rgba(0,0,0,0.05)] md:flex-row md:items-center md:justify-between md:py-8">
             <img
               src="/icons/hands.svg"
               alt=""
@@ -65,7 +65,7 @@ export default function HeroSection() {
             />
 
             <div className="max-w-[739px] text-primary">
-              <p className="font-serif text-h4">Construa um negócio sólido no mercado de consórcios.</p>
+              <p className="font-sans text-h4">Construa um negócio sólido no mercado de consórcios.</p>
               <p className="text-paragraph">
                 Seja um parceiro RBS e tenha acesso à estrutura completa para crescer com segurança.
               </p>

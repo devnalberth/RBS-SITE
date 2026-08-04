@@ -8,10 +8,10 @@ export default function Contact() {
   return (
     <>
       <Head>
-        <title>Contact Us - Empower | Get In Touch</title>
+        <title>Contato | RBS Consultoria Inteligente</title>
         <meta
           name="description"
-          content="Get in touch with Empower. Send us a message, call us, or visit our Los Angeles office. We respond within 24 hours."
+          content="Fale com a RBS Consultoria Inteligente. Atendimento por WhatsApp, e-mail ou presencial em Curitiba para estruturar seu consórcio com estratégia."
         />
       </Head>
       <main className="selection:bg-accent selection:text-white">

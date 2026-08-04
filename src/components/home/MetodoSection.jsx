@@ -36,10 +36,10 @@ export default function MetodoSection() {
     <section id="metodo" className="scroll-mt-28 bg-white px-6 py-20 text-primary md:py-32">
       <div className="mx-auto flex max-w-7xl flex-col gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
         {/* Texto — acompanha a rolagem ate o fim dos cards */}
-        <div className="flex flex-col gap-4 lg:sticky lg:top-32 lg:w-[448px]">
+        <div className="gs-reveal flex flex-col gap-4 lg:sticky lg:top-32 lg:w-[448px]">
           <p className="text-xs uppercase leading-none">COMO FUNCIONA</p>
 
-          <h2 className="pt-4 font-serif text-h2-m md:text-h2">
+          <h2 className="pt-4 font-sans text-h2-m md:text-h2">
             Método <span className="text-accent">RBS</span> de Estruturação
           </h2>
 
@@ -74,7 +74,7 @@ export default function MetodoSection() {
             >
               <span
                 aria-hidden="true"
-                className="w-8 shrink-0 font-serif text-h4 leading-[1.2] text-accent/30 md:w-10"
+                className="w-8 shrink-0 font-sans text-h4 leading-[1.2] text-accent/30 md:w-10"
               >
                 {etapa.numeral}
               </span>

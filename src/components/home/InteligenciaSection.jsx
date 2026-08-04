@@ -29,10 +29,10 @@ export default function InteligenciaSection() {
   return (
     <section id="inteligencia" className="scroll-mt-28 bg-white px-6 py-20 text-primary">
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col items-center">
+        <div className="gs-reveal flex flex-col items-center">
           <p className="text-center text-paragraph uppercase text-accent">Centro de Inteligência</p>
 
-          <h2 className="max-w-[896px] text-center font-serif text-h2-m md:text-h2">
+          <h2 className="max-w-[896px] text-center font-sans text-h2-m md:text-h2">
             Informação que gera estratégia.
           </h2>
 
@@ -42,7 +42,7 @@ export default function InteligenciaSection() {
           </p>
         </div>
 
-        <ul className="grid grid-cols-1 gap-8 pt-16 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="gs-stagger grid grid-cols-1 gap-8 pt-16 sm:grid-cols-2 lg:grid-cols-4">
           {RECURSOS.map((item) => (
             <li
               key={item.title}
@@ -67,7 +67,7 @@ export default function InteligenciaSection() {
                 />
               </span>
 
-              <h3 className="min-h-[64px] font-serif text-h4">{item.title}</h3>
+              <h3 className="min-h-[64px] font-sans text-h4">{item.title}</h3>
 
               <p className="text-sm leading-none text-gray-500">{item.text}</p>
             </li>

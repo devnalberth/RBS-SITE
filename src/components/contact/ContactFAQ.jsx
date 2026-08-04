@@ -1,26 +1,36 @@
 import { useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
 
-const faqs = [
+const PERGUNTAS = [
   {
-    question: 'How quickly will I hear back after submitting the form?',
-    answer: 'We respond to all inquiries within 24 business hours. For urgent matters, please call us directly at +99 1234 5478.',
+    question: 'Em quanto tempo recebo retorno?',
+    answer:
+      'Respondemos os contatos em até 24 horas úteis. Se precisar de algo mais rápido, o WhatsApp é o canal mais direto — normalmente o retorno sai no mesmo dia.',
   },
   {
-    question: 'Do you offer free initial consultations?',
-    answer: 'Yes! We offer a complimentary 30-minute consultation to understand your business needs and recommend the best approach before any commitment.',
+    question: 'O primeiro atendimento tem custo?',
+    answer:
+      'Não. O diagnóstico inicial é consultivo e sem compromisso: entendemos seu objetivo, analisamos sua realidade atual e só então apresentamos os cenários possíveis.',
   },
   {
-    question: 'Can I visit your office in person?',
-    answer: 'Absolutely. Our Los Angeles office is open during business hours. We recommend scheduling an appointment to ensure a team member is available to meet with you.',
+    question: 'Posso ir até o escritório?',
+    answer:
+      'Sim. Estamos na R. Padre Anchieta, 712 — Mercês, em Curitiba. Recomendamos agendar antes pelo WhatsApp para garantir que um especialista esteja disponível para te atender.',
   },
   {
-    question: 'Do you work with international clients?',
-    answer: 'Yes, we work with clients globally. We conduct meetings via video conferencing and can accommodate different time zones for your convenience.',
+    question: 'Vocês atendem clientes de outros estados?',
+    answer:
+      'Sim. Boa parte do acompanhamento é feita a distância, por videochamada e WhatsApp, com a mesma proximidade do atendimento presencial. Hoje temos clientes e parceiros em várias regiões do Brasil.',
   },
   {
-    question: 'What information should I prepare before reaching out?',
-    answer: 'A brief overview of your business, current challenges, and goals is helpful. Don\'t worry if you\'re unsure — our team will guide you through the discovery process.',
+    question: 'Sou consultor ou tenho escritório. Como funciona a parceria?',
+    answer:
+      'Selecione "Quero ser um Parceiro RBS" no formulário ou chame no WhatsApp. Apresentamos o modelo de comissionamento, o suporte comercial e a estrutura de treinamento e backoffice que oferecemos.',
+  },
+  {
+    question: 'O que devo ter em mãos no primeiro contato?',
+    answer:
+      'Basta ter clareza do seu objetivo e uma ideia da capacidade de investimento mensal. Se não souber ainda, tudo bem — parte do nosso trabalho é justamente ajudar a organizar isso.',
   },
 ];
 
@@ -28,39 +38,60 @@ export default function ContactFAQ() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section className="bg-gray-50 px-6 py-16 md:py-24">
+    <section className="bg-gray-50 px-6 py-16 text-primary md:py-24">
       <div className="mx-auto max-w-3xl">
         <div className="gs-reveal mb-10 text-center md:mb-14">
-          <h2 className="mb-4 text-3xl font-bold leading-tight md:text-4xl lg:text-5xl">
-            Common <span className="font-serif-italic text-accent">Questions</span>
+          <h2 className="mb-4 font-sans text-h2-m md:text-h2">
+            Dúvidas <span className="text-accent">frequentes</span>
           </h2>
-          <p className="mx-auto max-w-xl text-sm text-gray-500 md:text-base">
-            Quick answers to help you get in touch the right way.
+          <p className="mx-auto max-w-xl text-paragraph text-gray-500">
+            Respostas rápidas para você chegar preparado ao primeiro contato.
           </p>
         </div>
 
         <div className="gs-reveal space-y-4">
-          {faqs.map((faq, i) => (
-            <div key={i} className="rounded-2xl border border-gray-100 bg-white transition hover:border-gray-200">
-              <button
-                onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="flex w-full items-center justify-between gap-4 p-5 text-left text-base font-bold transition hover:text-accent md:p-6 md:text-lg"
-              >
-                {faq.question}
-                {openIndex === i ? (
-                  <Minus className="h-5 w-5 shrink-0 text-accent" />
-                ) : (
-                  <Plus className="h-5 w-5 shrink-0 text-accent" />
-                )}
-              </button>
+          {PERGUNTAS.map((faq, i) => {
+            const isOpen = openIndex === i;
+            const panelId = `contato-faq-${i}`;
+            const buttonId = `${panelId}-trigger`;
+
+            return (
               <div
-                className="overflow-hidden transition-all duration-300 ease-in-out"
-                style={{ maxHeight: openIndex === i ? '250px' : '0px' }}
+                key={faq.question}
+                className="rounded-2xl border border-gray-100 bg-white transition hover:border-gray-200"
               >
-                <p className="px-5 pb-5 text-sm leading-relaxed text-gray-500 md:px-6 md:pb-6 md:text-base">{faq.answer}</p>
+                <h3>
+                  <button
+                    type="button"
+                    id={buttonId}
+                    onClick={() => setOpenIndex(isOpen ? null : i)}
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    className="flex w-full items-center justify-between gap-4 p-5 text-left text-base font-bold transition hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:p-6 md:text-lg"
+                  >
+                    {faq.question}
+                    {isOpen ? (
+                      <Minus className="h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
+                    ) : (
+                      <Plus className="h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
+                    )}
+                  </button>
+                </h3>
+
+                <div
+                  id={panelId}
+                  role="region"
+                  aria-labelledby={buttonId}
+                  className="overflow-hidden transition-all duration-300 ease-in-out"
+                  style={{ maxHeight: isOpen ? '320px' : '0px' }}
+                >
+                  <p className="px-5 pb-5 text-paragraph text-gray-500 md:px-6 md:pb-6">
+                    {faq.answer}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
