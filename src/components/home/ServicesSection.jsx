@@ -16,8 +16,8 @@ const MODALIDADES = [
   {
     id: 'imoveis',
     title: 'Imóveis',
-    from: 'Créditos a partir de R$300.000,00',
-    price: 'R$ 300.000',
+    from: 'Créditos a partir de R$100.000,00',
+    price: 'R$ 100.000',
     items: [
       'Casas e apartamentos',
       'Construção e reforma',
