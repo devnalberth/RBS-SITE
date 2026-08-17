@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "@/styles/contempladas.css";
 import Layout from "@/components/layout/Layout";
 
 export default function App({ Component, pageProps }) {

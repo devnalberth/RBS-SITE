@@ -11,10 +11,11 @@ export default function Navbar() {
   const router = useRouter();
 
   const isHome = router.pathname === '/';
-  const isActive = (id) => (isHome ? activeId === id : id === null && isHome);
+  const isActive = (link) =>
+    link.id ? isHome && activeId === link.id : router.pathname === link.href;
 
-  const linkStateClass = (id) =>
-    isActive(id) ? 'text-accent font-bold' : 'hover:text-accent';
+  const linkStateClass = (link) =>
+    isActive(link) ? 'text-accent font-bold' : 'hover:text-accent';
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -84,14 +85,14 @@ export default function Navbar() {
             />
           </Link>
 
-          <div className="hidden xl:flex space-x-8 items-center text-sm leading-5 font-medium text-primary">
+          <div className="hidden xl:flex space-x-5 2xl:space-x-8 items-center text-sm leading-5 font-medium text-primary">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={(event) => handleNavClick(event, link.id)}
-                aria-current={isActive(link.id) ? 'true' : undefined}
-                className={`transition-colors ${linkStateClass(link.id)}`}
+                aria-current={isActive(link) ? 'page' : undefined}
+                className={`transition-colors ${linkStateClass(link)}`}
               >
                 {link.label}
               </Link>
@@ -134,7 +135,7 @@ export default function Navbar() {
               href={link.href}
               onClick={(event) => handleNavClick(event, link.id)}
               tabIndex={menuOpen ? undefined : -1}
-              className={`border-b border-gray-100 pb-2 transition-colors ${linkStateClass(link.id)}`}
+              className={`border-b border-gray-100 pb-2 transition-colors ${linkStateClass(link)}`}
             >
               {link.label}
             </Link>

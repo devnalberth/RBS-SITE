@@ -4,6 +4,7 @@ export const NAV_LINKS = [
   { id: 'modalidades', href: '/#modalidades', label: 'Modalidades' },
   { id: 'administradoras', href: '/#administradoras', label: 'Administradoras' },
   { id: 'consorcios', href: '/#consorcios', label: 'Estratégias' },
+  { id: null, href: '/contempladas', label: 'Contempladas' },
   { id: 'parceiro', href: '/#parceiro', label: 'Seja um Parceiro' },
   { id: 'faq', href: '/#faq', label: 'FAQ' },
 ];
