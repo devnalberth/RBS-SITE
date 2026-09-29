@@ -1,0 +1,3 @@
+# Bloqueia acesso público aos leads
+Require all denied
+Deny from all

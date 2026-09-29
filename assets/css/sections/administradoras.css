@@ -1,0 +1,56 @@
+.administradoras__heading {
+  display: flex;
+  max-width: 920px;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  margin: 0 auto 42px;
+  text-align: center;
+}
+
+.administradoras__heading h2 {
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.admin-card {
+  display: flex;
+  min-height: 258px;
+  flex-direction: column;
+  gap: 22px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px 30px;
+  border: 1px solid var(--brand-black);
+  border-radius: 14px;
+  text-align: center;
+  background: var(--brand-white);
+}
+
+.admin-card__logo {
+  display: flex;
+  height: 92px;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-card__logo img {
+  width: auto;
+  max-height: 92px;
+}
+
+.admin-card a {
+  color: var(--brand-gold-dark);
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+}

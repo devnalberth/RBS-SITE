@@ -1,33 +1,13 @@
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
+# Sistema e editores
 .DS_Store
+.vscode/
+.idea/
+
+# Configuração local e credenciais
+/api/config.local.php
+.env
+.env.*
+
+# Logs e arquivos temporários
+*.log
 *.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
-.env*.local
-/public/api/config.local.php
-
-# vercel
-.vercel
-
-# referencias visuais (nao entram no versionamento)
-/_archive/referencias/
