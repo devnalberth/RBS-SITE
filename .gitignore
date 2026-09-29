@@ -11,3 +11,7 @@
 # Logs e arquivos temporários
 *.log
 *.pem
+
+# Leads do formulário de credenciamento
+/api/dados/*
+!/api/dados/.htaccess
