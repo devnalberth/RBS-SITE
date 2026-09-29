@@ -15,7 +15,7 @@ assets/js/main.js           Interações. Edite só o bloco CONFIG
 assets/css/contempladas.css Estilos do catálogo de cartas contempladas
 assets/js/catalog.js        Catálogo de cartas (filtros, seleção, proposta, exportação)
 assets/img/                 Logos, favicon e imagem de compartilhamento
-api/cartas.php              Integração com a InvestMaster (chave em api/config.php)
+api/cartas.php              Integração com a InvestMaster. A chave fica em api/config.php, que não vai para o git: crie no servidor a partir de api/config.example.php
 api/credenciamento.php      Registro opcional dos leads (CSV + e-mail)
 .htaccess                   HTTPS, URLs sem .html, cache e redirecionamentos 301
 robots.txt, sitemap.xml     SEO
@@ -44,7 +44,7 @@ robots.txt, sitemap.xml     SEO
    - Razão social e CNPJ no rodapé
    - Links oficiais do LinkedIn e Instagram
 5. **Depoimentos:** a seção está pronta, mas oculta (`hidden` em `<section id="depoimentos">`). Com pelo menos 3 depoimentos reais e autorizados, preencha os cards e remova o `hidden`.
-6. **Política de Privacidade e Termos de Uso:** os links apontam para `/politica-de-privacidade` e `/termos-de-uso`. Crie `politica-de-privacidade.html` e `termos-de-uso.html` na raiz com o texto do jurídico da RBS.
+6. **Política de Privacidade e Termos de Uso:** `politica-de-privacidade.html` já existe, com texto baseado no que o site coleta. Peça ao jurídico da RBS para revisar e preencha `[Razão social]`, o CNPJ e `[Nome do encarregado]`. Os Termos de Uso (`/termos-de-uso`) ainda precisam ser criados.
 7. **Redirecionamentos:** liste as URLs antigas do WordPress (Search Console) e adicione os `Redirect 301` no `.htaccess`.
 
 ## Formulário

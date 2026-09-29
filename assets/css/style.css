@@ -432,6 +432,24 @@ section[id], [id].anchor { scroll-margin-top: calc(var(--header-h) + var(--heade
 .contact-map iframe { display: block; width: 100%; height: 100%; border: 0; }
 .rbs-card .rbs-link { margin-top: auto; max-width: 100%; overflow-wrap: anywhere; }
 
+/* ---------- páginas legais ---------- */
+.legal { display: grid; grid-template-columns: minmax(0, 280px) minmax(0, 1fr); gap: var(--space-16); align-items: start; }
+.legal__toc { position: sticky; top: calc(var(--header-h) + var(--header-top) + 24px); display: flex; flex-direction: column; gap: var(--space-4); }
+.legal__toc ol { list-style: none; margin: 0; padding: 0; display: grid; border-left: 1px solid var(--cinza-200); }
+.legal__toc a { display: block; margin-left: -1px; padding: 6px 0 6px 16px; border-left: 2px solid transparent; font-size: 14px; line-height: 20px; color: var(--cinza-600); text-decoration: none; transition: color .2s ease, border-color .2s ease; }
+.legal__toc a:hover { color: var(--azul-800); border-left-color: var(--azul-200); }
+.legal__body { max-width: 72ch; display: flex; flex-direction: column; gap: var(--space-12); }
+.legal__body > section { display: flex; flex-direction: column; gap: var(--space-4); }
+.legal__body h2 { font-size: 24px; line-height: 32px; font-weight: 600; color: var(--azul-800); }
+.legal__body h3 { font-size: 17px; line-height: 26px; font-weight: 600; color: var(--azul-800); }
+.legal__body p, .legal__body li { font-size: 16px; line-height: 28px; color: var(--cinza-600); }
+.legal__body ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: var(--space-2); }
+.legal__body li::marker { color: var(--azul-500); }
+.legal__body strong { font-weight: 600; color: var(--azul-800); }
+.legal__body a:not(.rbs-btn) { color: var(--azul-500); font-weight: 600; overflow-wrap: anywhere; }
+.legal__body code { padding: 1px 6px; border-radius: 6px; background: var(--azul-50); font-size: 14px; color: var(--azul-800); }
+.legal__meta { font-size: 14px; line-height: 22px; color: var(--cinza-600); }
+
 /* ---------- 404 ---------- */
 .error-page { min-height: 72vh; display: grid; align-items: center; }
 .error-page__code { font-family: var(--font-serif); font-style: italic; font-size: 120px; line-height: 1; color: var(--azul-200); }
@@ -515,6 +533,8 @@ html.has-dialog { overflow: hidden; }
   .split, .method, .faq-layout, .cred { grid-template-columns: minmax(0, 1fr); gap: var(--space-12); }
   .split__media { position: relative; top: auto; aspect-ratio: 16 / 10; order: -1; }
   .method__intro, .faq-layout__aside, .rbs-next { position: static; }
+  .legal { grid-template-columns: minmax(0, 1fr); }
+  .legal__toc { display: none; }
   .founder { grid-template-columns: minmax(0, 1fr); }
   .cert { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); padding: var(--space-12); }
   .cert__seal { max-width: 220px; }

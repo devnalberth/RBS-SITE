@@ -4,6 +4,7 @@
 .idea/
 
 # Configuração local e credenciais
+/api/config.php
 /api/config.local.php
 .env
 .env.*
