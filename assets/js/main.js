@@ -45,6 +45,11 @@ const CONFIG = {
   $$('[data-pca]').forEach((a) => { a.href = CONFIG.pcaValidationUrl; });
   $$('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
 
+  /* ---------- vídeo do hero ---------- */
+  $$('[data-hero-video]').forEach((v) => {
+    if (reduceMotion) { v.removeAttribute('autoplay'); v.pause(); }
+  });
+
   /* ---------- imagens ausentes viram placeholder ---------- */
   $$('.media > img').forEach((img) => {
     const fig = img.parentElement;

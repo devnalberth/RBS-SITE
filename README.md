@@ -29,7 +29,7 @@ robots.txt, sitemap.xml     SEO
    - `pcaValidationUrl`: hoje aponta para a consulta pública de certificados da ABAC. Troque pelo link do badge do Rodrigo na Brasil Open Badge assim que ele ativar.
    - `formEndpoint`: `'api/credenciamento.php'` para registrar os leads (veja abaixo). Vazio = o formulário só abre o WhatsApp.
 2. **Fotos:** a home usa as fotos do site antigo, em `assets/images/webp/`. Para trocar, substitua o `src` da imagem em `index.html`. Se um arquivo não existir, o site mostra um bloco azul com a legenda da foto que falta.
-   - Hero: `home/hero-desktop.webp` e `home/hero-mobile.webp` (no celular)
+   - Hero: vídeo `assets/images/videohero/videoherorbs.mp4`, com `videoherorbs-poster.webp` (primeiro quadro) como capa enquanto carrega. Para trocar o vídeo, gere uma capa nova do primeiro quadro. Quem ativa "reduzir movimento" no sistema vê só a capa.
    - Para quem é a parceria: `ctaimage.webp`
    - Treinamentos: `home/modalidade-empresarial.webp` (Onboarding), `home/modalidade-imoveis.webp` (Produtos e regras), `home/modalidade-veiculos.webp` (Venda consultiva), `home/modalide-investimentos.webp` (Performance)
    - Fundador: `rodrigo/04.webp`
