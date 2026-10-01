@@ -253,7 +253,6 @@ const CONFIG = {
     lastOpener = document.activeElement;
     if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
     document.documentElement.classList.add('has-dialog');
-    updateMobileCta();
     setTimeout(() => $('input:not([type="hidden"])', f)?.focus(), 50);
   };
   const closeDialog = () => {
@@ -262,7 +261,6 @@ const CONFIG = {
   };
   dialog?.addEventListener('close', () => {
     document.documentElement.classList.remove('has-dialog');
-    updateMobileCta();
     lastOpener?.focus?.();
   });
   dialog?.addEventListener('click', (e) => { if (e.target === dialog) closeDialog(); });
@@ -461,28 +459,4 @@ const CONFIG = {
     window.addEventListener('hashchange', () => { if (ADM_NAMES[fromHash()]) select(fromHash(), false, false); });
   }
 
-  /* ---------- barra de CTA no mobile ---------- */
-  const mobileCta = $('[data-mobile-cta]');
-  const hideZones = $$('[data-hide-mobile-cta]');
-  const visibleZones = new Set();
-  function updateMobileCta() {
-    if (!mobileCta) return;
-    const pastTop = window.scrollY > 420;
-    const show = pastTop && visibleZones.size === 0 && !(dialog && dialog.open) && !header?.classList.contains('is-open');
-    mobileCta.classList.toggle('is-visible', show);
-    mobileCta.setAttribute('aria-hidden', String(!show));
-    $$('a, button', mobileCta).forEach((el) => { el.tabIndex = show ? 0 : -1; });
-  }
-  if (mobileCta) {
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((en) => { if (en.isIntersecting) visibleZones.add(en.target); else visibleZones.delete(en.target); });
-        updateMobileCta();
-      });
-      hideZones.forEach((z) => io.observe(z));
-    }
-    window.addEventListener('scroll', updateMobileCta, { passive: true });
-    toggle?.addEventListener('click', updateMobileCta);
-    updateMobileCta();
-  }
 })();
