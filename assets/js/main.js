@@ -198,6 +198,50 @@ const CONFIG = {
     render();
   });
 
+  /* ---------- animações de entrada ----------
+     Só anima o que ainda está abaixo da dobra; o topo da página usa a animação de CSS. */
+  const REVEAL_GROUPS = '.grid, .steps, .rbs-faq, .carousel__track';
+  const REVEAL_SINGLES = [
+    '.section__head', '.head-row', '.turn', '.split__media', '.rbs-acc', '.method__intro',
+    '.founder', '.cert', '.faq-layout__aside', '.cta', '.section__foot', '.rbs-docs', '.rbs-next',
+    '.form-section', '.contact-map', '.legal__toc', '.legal__body > *', '.rbs-stats',
+  ].join(', ');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    const fold = window.innerHeight * 0.92;
+    const below = (el) => el.getBoundingClientRect().top > fold && !el.closest('.page-top, .hero, dialog');
+    const done = (el) => {
+      el.addEventListener('transitionend', (e) => {
+        if (e.target !== el || e.propertyName !== 'opacity') return;
+        el.removeAttribute('data-reveal');
+        el.classList.remove('is-in');
+        el.style.removeProperty('--reveal-delay');
+      });
+      el.classList.add('is-in');
+    };
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        const t = en.target;
+        (t.hasAttribute('data-reveal-group') ? $$(':scope > [data-reveal]', t) : [t]).forEach(done);
+        io.unobserve(t);
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+
+    $$(REVEAL_GROUPS).filter(below).forEach((g) => {
+      g.setAttribute('data-reveal-group', '');
+      Array.from(g.children).forEach((c, n) => {
+        c.setAttribute('data-reveal', '');
+        c.style.setProperty('--reveal-delay', `${Math.min(n, 5) * 90}ms`);
+      });
+      io.observe(g);
+    });
+    $$(REVEAL_SINGLES).filter(below).forEach((el) => {
+      if (el.closest('[data-reveal]') || $('[data-reveal]', el)) return;
+      el.setAttribute('data-reveal', '');
+      io.observe(el);
+    });
+  }
+
   /* ---------- popup do formulário ---------- */
   const dialog = $('#form-dialog');
   let lastOpener = null;
