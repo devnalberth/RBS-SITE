@@ -8,9 +8,9 @@ const CONFIG = {
   whatsapp: '5511989864178',
   // E-mail que recebe a documentação
   email: 'credenciamento@rbsconsultoriainteligente.com.br',
-  // Endpoint que registra o lead antes de abrir o WhatsApp.
+  // Endpoint que registra o lead e envia o e-mail antes de abrir o WhatsApp.
   // Hostinger/PHP: 'api/credenciamento.php' (relativo à raiz do site). Vazio = só WhatsApp.
-  formEndpoint: '',
+  formEndpoint: 'api/credenciamento.php',
   // Link da Roma Capital (consumidor final)
   romaCapitalUrl: '#',
   // Validação da certificação PCA-10. Ideal: o link do badge do Rodrigo na Brasil Open Badge.
@@ -44,6 +44,36 @@ const CONFIG = {
   $$('[data-roma]').forEach((a) => { a.href = CONFIG.romaCapitalUrl; });
   $$('[data-pca]').forEach((a) => { a.href = CONFIG.pcaValidationUrl; });
   $$('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
+
+  const footerIcons = [
+    ['.site-footer a[data-wa]', 'whatsapp.svg'],
+    ['.site-footer a[href*="linkedin.com"]', 'linkedin.svg'],
+    ['.site-footer a[href*="instagram.com"]', 'instagram.svg'],
+  ];
+  footerIcons.forEach(([selector, icon]) => {
+    $$(selector).forEach((link) => {
+      if (link.querySelector('img') || link.closest('.site-footer__credits')) return;
+      link.classList.add('site-footer__icon-link');
+      const image = document.createElement('img');
+      image.src = `${rootPath}assets/icons/${icon}`;
+      image.alt = '';
+      image.width = 18;
+      image.height = 18;
+      image.setAttribute('aria-hidden', 'true');
+      link.prepend(image);
+    });
+  });
+
+  if (!$('.whatsapp-float')) {
+    const floatingWhatsapp = document.createElement('a');
+    floatingWhatsapp.className = 'whatsapp-float';
+    floatingWhatsapp.href = waLink('Olá! Vim pelo site da RBS e quero falar com a equipe de parcerias.');
+    floatingWhatsapp.target = '_blank';
+    floatingWhatsapp.rel = 'noopener';
+    floatingWhatsapp.setAttribute('aria-label', 'Falar com a RBS pelo WhatsApp');
+    floatingWhatsapp.innerHTML = `<img src="${rootPath}assets/icons/whatsapp.svg" alt="" width="30" height="30" aria-hidden="true">`;
+    document.body.append(floatingWhatsapp);
+  }
 
   /* ---------- vídeo do hero ---------- */
   $$('[data-hero-video]').forEach((v) => {
@@ -330,18 +360,19 @@ const CONFIG = {
   };
 
   const buildMessage = (fd) => {
+    const val = (k) => (fd.get(k) || '').trim();
     const adms = fd.getAll('administradoras');
+    const block = (title, rows) => {
+      const filled = rows.filter(([, v]) => v);
+      return filled.length ? ['', `*${title}*`, ...filled.map(([k, v]) => `${k}: ${v}`)] : [];
+    };
     const lines = [
       'Olá, Rodrigo! Acabei de enviar minha solicitação de credenciamento pelo site da RBS.',
-      '',
-      `Nome: ${fd.get('nome')}`,
-      `Cidade/UF: ${fd.get('cidade')}`,
-      `Perfil: ${fd.get('perfil')}`,
-      `Possui CNPJ: ${fd.get('possui_cnpj')}`,
-      `Já atua com consórcio: ${fd.get('atua_consorcio')}`,
+      ...block('CONTATO', [['Nome', val('nome')], ['WhatsApp', val('whatsapp')], ['E-mail', val('email')], ['Cidade/UF', val('cidade')]]),
+      ...block('PERFIL', [['Perfil profissional', val('perfil')], ['Possui CNPJ', val('possui_cnpj')], ['Já atua com consórcio', val('atua_consorcio')], ['Tamanho da equipe', val('tamanho_equipe')]]),
+      ...block('INTERESSE', [['Administradoras', adms.join(', ')]]),
     ];
-    if (adms.length) lines.push(`Administradoras de interesse: ${adms.join(', ')}`);
-    if (fd.get('tamanho_equipe')) lines.push(`Tamanho da equipe: ${fd.get('tamanho_equipe')}`);
+    if (val('mensagem')) lines.push('', '*MENSAGEM*', val('mensagem'));
     return lines.join('\n');
   };
 
@@ -351,7 +382,10 @@ const CONFIG = {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), 8000);
     try {
-      await fetch(url, { method: 'POST', body: fd, signal: ctrl.signal, headers: { Accept: 'application/json' } });
+      const body = new FormData();
+      fd.forEach((v, k) => { if (k !== 'administradoras') body.append(k, v); });
+      body.append('administradoras', fd.getAll('administradoras').join(', '));
+      await fetch(url, { method: 'POST', body, signal: ctrl.signal, headers: { Accept: 'application/json' } });
     } catch (e) {
       // o WhatsApp segue abrindo mesmo se o registro falhar
       console.warn('Falha ao registrar o lead:', e);

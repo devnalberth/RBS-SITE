@@ -27,7 +27,7 @@ robots.txt, sitemap.xml     SEO
    - `whatsapp`: número oficial só com dígitos (hoje `5511989864178`)
    - `romaCapitalUrl`: link da Roma Capital
    - `pcaValidationUrl`: hoje aponta para a consulta pública de certificados da ABAC. Troque pelo link do badge do Rodrigo na Brasil Open Badge assim que ele ativar.
-   - `formEndpoint`: `'api/credenciamento.php'` para registrar os leads (veja abaixo). Vazio = o formulário só abre o WhatsApp.
+   - `formEndpoint`: já está em `'api/credenciamento.php'`, que grava o lead e envia o e-mail (veja abaixo). Vazio = o formulário só abre o WhatsApp.
 2. **Fotos:** a home usa as fotos do site antigo, em `assets/images/webp/`. Para trocar, substitua o `src` da imagem em `index.html`. Se um arquivo não existir, o site mostra um bloco azul com a legenda da foto que falta.
    - Hero: vídeo `assets/images/videohero/videoherorbs.mp4`, com `videoherorbs-poster.webp` (primeiro quadro) como capa enquanto carrega. Para trocar o vídeo, gere uma capa nova do primeiro quadro. Quem ativa "reduzir movimento" no sistema vê só a capa.
    - Para quem é a parceria: `ctaimage.webp`
@@ -41,7 +41,6 @@ robots.txt, sitemap.xml     SEO
    - Nomes, cargos e fotos do time
    - Vigência das certificações CEA, CPA-20 e ABAC PCA-10
    - FAQ "Em quais regiões a RBS atua?"
-   - Razão social e CNPJ no rodapé
    - Links oficiais do LinkedIn e Instagram
 5. **Depoimentos:** a seção está pronta, mas oculta (`hidden` em `<section id="depoimentos">`). Com pelo menos 3 depoimentos reais e autorizados, preencha os cards e remova o `hidden`.
 6. **Política de Privacidade e Termos de Uso:** `politica-de-privacidade.html` já existe, com texto baseado no que o site coleta. Peça ao jurídico da RBS para revisar e preencha `[Razão social]`, o CNPJ e `[Nome do encarregado]`. Os Termos de Uso (`/termos-de-uso`) ainda precisam ser criados.
@@ -52,10 +51,10 @@ robots.txt, sitemap.xml     SEO
 O fluxo é o mesmo no popup (todos os botões "Quero me credenciar") e no fim da página /credenciamento:
 
 1. Valida os campos (nome, WhatsApp com DDD, e-mail, cidade, perfil, CNPJ, experiência, consentimento).
-2. Se `formEndpoint` estiver preenchido, envia os dados para ele.
-3. Mostra a mensagem de sucesso e abre o WhatsApp com os dados do lead já escritos.
+2. Envia os dados para `formEndpoint`, que grava o lead e manda o e-mail para a equipe.
+3. Mostra a mensagem de sucesso e abre o WhatsApp de parcerias (`CONFIG.whatsapp`) com os dados já escritos, em blocos: Contato, Perfil, Interesse e Mensagem.
 
-`api/credenciamento.php` grava cada lead em `api/dados/leads.csv` (pasta bloqueada ao público) e envia um e-mail para `credenciamento@rbsconsultoriainteligente.com.br`. Crie a caixa `site@rbsconsultoriainteligente.com.br` (ou troque a constante `REMETENTE`) para o e-mail não cair em spam.
+`api/credenciamento.php` grava cada lead em `api/dados/leads.csv` (pasta bloqueada ao público) e envia um e-mail para `rbs.consultoria.inteligente@gmail.com` (constante `DESTINO`), separado nas mesmas seções, com a origem do contato (página e UTMs) e botões para responder pelo WhatsApp ou por e-mail. O "Responder" do e-mail já vai para o lead. Crie a caixa `site@rbsconsultoriainteligente.com.br` (ou troque a constante `REMETENTE`) para o e-mail não cair em spam.
 
 Os UTMs da URL (`utm_source`, `utm_medium`, `utm_campaign`), a página e a administradora de origem vão junto no envio.
 

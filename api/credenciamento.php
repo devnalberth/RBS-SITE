@@ -1,14 +1,15 @@
 <?php
 /**
  * RBS Consultoria Inteligente — registro de leads do formulário de credenciamento.
- * Para ativar: em assets/js/main.js, defina CONFIG.formEndpoint = 'api/credenciamento.php'.
+ * Ativo quando CONFIG.formEndpoint = 'api/credenciamento.php' em assets/js/main.js.
  * Requer PHP 7.4+ com mail() habilitado (padrão na Hostinger).
  */
 
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
+date_default_timezone_set('America/Sao_Paulo');
 
-const DESTINO   = 'credenciamento@rbsconsultoriainteligente.com.br';
+const DESTINO   = 'rbs.consultoria.inteligente@gmail.com';
 const REMETENTE = 'site@rbsconsultoriainteligente.com.br'; // precisa existir no domínio
 const ARQUIVO   = __DIR__ . '/dados/leads.csv';            // pasta protegida por .htaccess
 
@@ -24,11 +25,15 @@ if (!empty($_POST['site_empresa'])) {
     exit;
 }
 
-function campo(string $k, int $max = 200): string {
+function campo(string $k, int $max = 200, bool $multilinha = false): string {
     $v = isset($_POST[$k]) ? (is_array($_POST[$k]) ? implode(', ', $_POST[$k]) : $_POST[$k]) : '';
     $v = trim(strip_tags((string) $v));
-    $v = preg_replace('/[\r\n]+/', ' ', $v);
+    $v = $multilinha ? preg_replace("/\r\n?/", "\n", $v) : preg_replace('/[\r\n]+/', ' ', $v);
     return mb_substr($v, 0, $max);
+}
+
+function h(string $v): string {
+    return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 }
 
 $lead = [
@@ -40,9 +45,9 @@ $lead = [
     'perfil'        => campo('perfil'),
     'possui_cnpj'   => campo('possui_cnpj', 5),
     'atua_consorcio'=> campo('atua_consorcio', 5),
-    'administradoras' => isset($_POST['administradoras']) ? campo('administradoras') : '',
+    'administradoras' => campo('administradoras'),
     'tamanho_equipe'=> campo('tamanho_equipe', 30),
-    'mensagem'      => campo('mensagem', 1000),
+    'mensagem'      => campo('mensagem', 1000, true),
     'consentimento' => campo('consentimento', 5),
     'administradora_origem' => campo('administradora_origem'),
     'utm_source'    => campo('utm_source'),
@@ -73,17 +78,83 @@ if ($fh = @fopen(ARQUIVO, 'a')) {
     fclose($fh);
 }
 
-// 2) avisa por e-mail
-$assunto = 'Nova solicitação de credenciamento | ' . $lead['nome'];
-$corpo = "Nova solicitação de credenciamento pelo site\n\n";
-foreach ($lead as $k => $v) {
-    if ($v !== '') { $corpo .= str_pad(ucfirst(str_replace('_', ' ', $k)) . ':', 26) . $v . "\n"; }
+// 2) avisa por e-mail, em seções
+$recebido = date('d/m/Y \à\s H:i');
+$secoes = [
+    'Contato' => [
+        'Nome'      => $lead['nome'],
+        'WhatsApp'  => $lead['whatsapp'],
+        'E-mail'    => $lead['email'],
+        'Cidade/UF' => $lead['cidade'],
+    ],
+    'Perfil' => [
+        'Perfil profissional'   => $lead['perfil'],
+        'Possui CNPJ'           => $lead['possui_cnpj'],
+        'Já atua com consórcio' => $lead['atua_consorcio'],
+        'Tamanho da equipe'     => $lead['tamanho_equipe'],
+    ],
+    'Interesse' => [
+        'Administradoras'  => $lead['administradoras'],
+        'Aba de origem'    => $lead['administradora_origem'],
+    ],
+    'Origem do contato' => [
+        'Recebido em'  => $recebido,
+        'Página'       => $lead['pagina'],
+        'UTM source'   => $lead['utm_source'],
+        'UTM medium'   => $lead['utm_medium'],
+        'UTM campaign' => $lead['utm_campaign'],
+        'Consentimento LGPD' => 'Sim',
+    ],
+];
+$waLead = 'https://wa.me/55' . $tel;
+
+$texto = "NOVA SOLICITAÇÃO DE CREDENCIAMENTO\nRecebida em {$recebido}\n";
+foreach ($secoes as $titulo => $itens) {
+    $texto .= "\n" . mb_strtoupper($titulo) . "\n";
+    foreach ($itens as $rotulo => $valor) {
+        if ($valor !== '') { $texto .= "{$rotulo}: {$valor}\n"; }
+    }
+    if ($titulo === 'Interesse' && $lead['mensagem'] !== '') {
+        $texto .= "\nMENSAGEM\n{$lead['mensagem']}\n";
+    }
 }
+$texto .= "\nResponder pelo WhatsApp: {$waLead}\n";
+
+$linhas = '';
+foreach ($secoes as $titulo => $itens) {
+    $linhas .= '<tr><td colspan="2" style="padding:24px 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#2c6d82;font-weight:700;border-bottom:1px solid #d5e0e5">' . h($titulo) . '</td></tr>';
+    foreach ($itens as $rotulo => $valor) {
+        if ($valor === '') { continue; }
+        $linhas .= '<tr><td style="padding:8px 16px 8px 0;width:180px;color:#50666f;vertical-align:top">' . h($rotulo) . '</td><td style="padding:8px 0;color:#0d2f3e;font-weight:600;vertical-align:top">' . h($valor) . '</td></tr>';
+    }
+    if ($titulo === 'Interesse' && $lead['mensagem'] !== '') {
+        $linhas .= '<tr><td colspan="2" style="padding:24px 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#2c6d82;font-weight:700;border-bottom:1px solid #d5e0e5">Mensagem</td></tr>';
+        $linhas .= '<tr><td colspan="2" style="padding:12px 0;color:#0d2f3e;line-height:22px">' . nl2br(h($lead['mensagem'])) . '</td></tr>';
+    }
+}
+$html = '<!doctype html><html lang="pt-BR"><body style="margin:0;padding:24px;background:#f1f6f8;font-family:Arial,Helvetica,sans-serif;font-size:14px">'
+    . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden">'
+    . '<tr><td style="background:#0d2f3e;padding:24px 32px;color:#ffffff"><div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#afc3ca">Site RBS · Credenciamento</div>'
+    . '<div style="font-size:22px;font-weight:700;margin-top:6px">' . h($lead['nome']) . '</div>'
+    . '<div style="color:#afc3ca;margin-top:4px">' . h($lead['cidade']) . ' · ' . h($lead['perfil']) . '</div></td></tr>'
+    . '<tr><td style="padding:8px 32px 24px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">' . $linhas . '</table>'
+    . '<p style="margin:28px 0 0"><a href="' . h($waLead) . '" style="display:inline-block;background:#1e7a4f;color:#ffffff;text-decoration:none;font-weight:700;padding:12px 20px;border-radius:999px">Responder pelo WhatsApp</a>'
+    . ' &nbsp; <a href="mailto:' . h($lead['email']) . '" style="color:#1d566b;font-weight:600">Responder por e-mail</a></p>'
+    . '</td></tr></table></body></html>';
+
+$assunto = 'Credenciamento | ' . $lead['nome'] . ' | ' . $lead['cidade'];
+$limite = 'rbs-' . bin2hex(random_bytes(8));
+$corpo = "--{$limite}\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+    . chunk_split(base64_encode($texto))
+    . "--{$limite}\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+    . chunk_split(base64_encode($html))
+    . "--{$limite}--";
 $headers = [
     'From: RBS Site <' . REMETENTE . '>',
     'Reply-To: ' . $lead['email'],
-    'Content-Type: text/plain; charset=UTF-8',
+    'MIME-Version: 1.0',
+    'Content-Type: multipart/alternative; boundary="' . $limite . '"',
 ];
-@mail(DESTINO, '=?UTF-8?B?' . base64_encode($assunto) . '?=', $corpo, implode("\r\n", $headers));
+$enviado = @mail(DESTINO, '=?UTF-8?B?' . base64_encode($assunto) . '?=', $corpo, implode("\r\n", $headers));
 
-echo json_encode(['ok' => true]);
+echo json_encode(['ok' => true, 'email' => $enviado]);
