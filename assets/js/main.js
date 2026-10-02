@@ -26,7 +26,7 @@ const CONFIG = {
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isSubpage = /^\/credenciamento\/?$/.test(location.pathname);
+  const isSubpage = /^\/credenciamento(\.html)?\/?$/.test(location.pathname);
   const rootPath = $('link[rel="stylesheet"][href*="assets/css/style.css"]')?.getAttribute('href').replace(/assets\/css\/style\.css.*$/, '') || '';
 
   const waLink = (msg) => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
