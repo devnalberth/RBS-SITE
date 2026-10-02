@@ -3,6 +3,7 @@
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
 Options -Indexes -MultiViews
+AddCharset UTF-8 .txt .xml
 
 <IfModule mod_rewrite.c>
   RewriteEngine On

@@ -19,6 +19,7 @@ api/cartas.php              Integração com a InvestMaster. A chave fica em api
 api/credenciamento.php      Registro opcional dos leads (CSV + e-mail)
 .htaccess                   HTTPS, URLs sem .html, cache e redirecionamentos 301
 robots.txt, sitemap.xml     SEO
+llms.txt                    Resumo do site para assistentes de IA (ChatGPT, Claude, Perplexity). Atualize junto com o conteúdo
 ```
 
 ## Antes de publicar
@@ -50,7 +51,7 @@ robots.txt, sitemap.xml     SEO
 
 O fluxo é o mesmo no popup (todos os botões "Quero me credenciar") e no fim da página /credenciamento:
 
-1. Valida os campos (nome, WhatsApp com DDD, e-mail, cidade, perfil, CNPJ, experiência, consentimento). Quem marca "Possui CNPJ? Sim" vê o bloco "Dados da empresa e do sócio": razão social, CNPJ (inclusive o alfanumérico) e CPF são obrigatórios e validados pelos dígitos verificadores; nome fantasia, telefone, e-mail do sócio administrador e chave Pix são opcionais.
+1. Valida os campos (nome, WhatsApp com DDD, e-mail, cidade, perfil, CNPJ, experiência, consentimento). Quem marca "Possui CNPJ? Sim" vê o bloco "Dados da empresa", que muda conforme a administradora marcada. Os dados de cada administradora, na ordem em que chegam no e-mail e no WhatsApp, ficam em `LAYOUTS` no `assets/js/main.js`: Bradesco e Embracon usam o padrão (razão social, CNPJ, telefone, e-mail do sócio administrador, chave Pix e CPF); a Volkswagen pede também endereço (preenchido pelo CEP via ViaCEP), inscrição municipal, conselho, RG e permite adicionar até 5 sócios. CNPJ (inclusive o alfanumérico) e CPF são validados pelos dígitos verificadores.
 2. Envia os dados para `formEndpoint`, que grava o lead e manda o e-mail para a equipe.
 3. Mostra a mensagem de sucesso e abre o WhatsApp de parcerias (`CONFIG.whatsapp`) com os dados já escritos, em blocos: Contato, Perfil, Interesse e Mensagem.
 

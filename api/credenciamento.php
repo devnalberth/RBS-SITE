@@ -32,6 +32,21 @@ function campo(string $k, int $max = 200, bool $multilinha = false): string {
     return mb_substr($v, 0, $max);
 }
 
+function texto($v, int $max): string {
+    return mb_substr(trim(strip_tags(is_scalar($v) ? (string) $v : '')), 0, $max);
+}
+
+// sócios adicionais (Volkswagen), um por linha no CSV
+function outrosSocios(): string {
+    $nomes = (array) ($_POST['socio_nome'] ?? []);
+    $linhas = [];
+    foreach (array_slice($nomes, 0, 5, true) as $i => $nome) {
+        $dados = array_map(fn($k) => texto(((array) ($_POST[$k] ?? []))[$i] ?? '', 120), ['socio_email', 'socio_telefone', 'socio_rg', 'socio_cpf']);
+        $linhas[] = implode(' | ', array_merge([texto($nome, 120)], $dados));
+    }
+    return implode("\n", $linhas);
+}
+
 function h(string $v): string {
     return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 }
@@ -45,12 +60,23 @@ $lead = [
     'perfil'        => campo('perfil'),
     'possui_cnpj'   => campo('possui_cnpj', 5),
     'razao_social'  => campo('razao_social'),
-    'nome_fantasia' => campo('nome_fantasia'),
     'cnpj'          => campo('cnpj', 18),
     'telefone_empresa' => campo('telefone_empresa', 20),
     'email_socio_admin' => campo('email_socio_admin'),
     'chave_pix'     => campo('chave_pix', 120),
+    'cep'           => campo('cep', 9),
+    'endereco'      => campo('endereco'),
+    'numero'        => campo('numero', 20),
+    'complemento'   => campo('complemento', 100),
+    'bairro'        => campo('bairro', 100),
+    'cidade_empresa'=> campo('cidade_empresa', 100),
+    'estado'        => campo('estado', 2),
+    'inscricao_municipal' => campo('inscricao_municipal', 40),
+    'conselho'      => campo('conselho', 40),
+    'numero_conselho' => campo('numero_conselho', 40),
     'cpf'           => campo('cpf', 14),
+    'rg'            => campo('rg', 20),
+    'outros_socios' => outrosSocios(),
     'atua_consorcio'=> campo('atua_consorcio', 5),
     'administradoras' => campo('administradoras'),
     'tamanho_equipe'=> campo('tamanho_equipe', 30),
@@ -85,72 +111,51 @@ if ($fh = @fopen(ARQUIVO, 'a')) {
     fclose($fh);
 }
 
-// 2) avisa por e-mail, em seções
+// 2) avisa por e-mail, nas seções montadas pelo formulário para a administradora escolhida
 $recebido = date('d/m/Y \à\s H:i');
-$secoes = [
-    'Contato' => [
-        'Nome'      => $lead['nome'],
-        'CPF'       => $lead['cpf'],
-        'WhatsApp'  => $lead['whatsapp'],
-        'E-mail'    => $lead['email'],
-        'Cidade/UF' => $lead['cidade'],
-    ],
-    'Empresa' => [
-        'Razão social'  => $lead['razao_social'],
-        'Nome fantasia' => $lead['nome_fantasia'],
-        'CNPJ'          => $lead['cnpj'],
-        'Telefone'      => $lead['telefone_empresa'],
-        'E-mail do sócio administrador' => $lead['email_socio_admin'],
-        'Chave Pix'     => $lead['chave_pix'],
-    ],
-    'Perfil' => [
-        'Perfil profissional'   => $lead['perfil'],
-        'Possui CNPJ'           => $lead['possui_cnpj'],
-        'Já atua com consórcio' => $lead['atua_consorcio'],
-        'Tamanho da equipe'     => $lead['tamanho_equipe'],
-    ],
-    'Interesse' => [
-        'Administradoras'  => $lead['administradoras'],
-        'Aba de origem'    => $lead['administradora_origem'],
-    ],
-    'Origem do contato' => [
-        'Recebido em'  => $recebido,
-        'Página'       => $lead['pagina'],
-        'UTM source'   => $lead['utm_source'],
-        'UTM medium'   => $lead['utm_medium'],
-        'UTM campaign' => $lead['utm_campaign'],
-        'Consentimento LGPD' => 'Sim',
-    ],
-];
-if ($lead['possui_cnpj'] !== 'Sim') { unset($secoes['Empresa']); }
+$secoes = [];
+$resumo = json_decode((string) ($_POST['resumo'] ?? ''), true);
+foreach (array_slice((array) ($resumo['secoes'] ?? []), 0, 15) as $s) {
+    if (!is_array($s)) { continue; }
+    $titulo = texto($s['title'] ?? '', 80);
+    $itens = [];
+    foreach (array_slice((array) ($s['rows'] ?? []), 0, 30) as $r) {
+        if (!is_array($r)) { continue; }
+        $valor = texto($r[1] ?? '', 1000);
+        if ($valor !== '') { $itens[] = [texto($r[0] ?? '', 80), $valor]; }
+    }
+    if ($titulo !== '' && $itens) { $secoes[] = [$titulo, $itens]; }
+}
+if (!$secoes) {
+    $itens = [];
+    foreach ($lead as $k => $v) {
+        if ($v !== '' && !in_array($k, ['data', 'ip', 'consentimento', 'pagina', 'utm_source', 'utm_medium', 'utm_campaign'], true)) {
+            $itens[] = [ucfirst(str_replace('_', ' ', $k)), $v];
+        }
+    }
+    $secoes[] = ['Dados enviados', $itens];
+}
+$origem = [['Recebido em', $recebido], ['Página', $lead['pagina']], ['Aba de origem', $lead['administradora_origem']], ['UTM source', $lead['utm_source']], ['UTM medium', $lead['utm_medium']], ['UTM campaign', $lead['utm_campaign']], ['Consentimento LGPD', 'Sim']];
+$secoes[] = ['Origem do contato', array_values(array_filter($origem, fn($r) => $r[1] !== ''))];
+
 $waLead = 'https://wa.me/55' . $tel;
 $admEscolhidas = array_filter(array_map('trim', explode(',', $lead['administradoras'])), fn($a) => $a !== '' && $a !== 'Ainda não sei');
 $adm = implode(', ', $admEscolhidas) ?: ($lead['administradora_origem'] ?: 'A definir');
 
 $texto = "NOVA SOLICITAÇÃO DE CREDENCIAMENTO\nAdministradora: {$adm}\nRecebida em {$recebido}\n";
-foreach ($secoes as $titulo => $itens) {
+$linhas = '';
+$estiloTitulo = 'padding:24px 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#2c6d82;font-weight:700;border-bottom:1px solid #d5e0e5';
+foreach ($secoes as [$titulo, $itens]) {
     $texto .= "\n" . mb_strtoupper($titulo) . "\n";
-    foreach ($itens as $rotulo => $valor) {
-        if ($valor !== '') { $texto .= "{$rotulo}: {$valor}\n"; }
-    }
-    if ($titulo === 'Interesse' && $lead['mensagem'] !== '') {
-        $texto .= "\nMENSAGEM\n{$lead['mensagem']}\n";
+    $linhas .= '<tr><td colspan="2" style="' . $estiloTitulo . '">' . h($titulo) . '</td></tr>';
+    foreach ($itens as [$rotulo, $valor]) {
+        $texto .= ($rotulo !== '' ? "{$rotulo}: " : '') . $valor . "\n";
+        $linhas .= $rotulo !== ''
+            ? '<tr><td style="padding:8px 16px 8px 0;width:200px;color:#50666f;vertical-align:top">' . h($rotulo) . '</td><td style="padding:8px 0;color:#0d2f3e;font-weight:600;vertical-align:top">' . h($valor) . '</td></tr>'
+            : '<tr><td colspan="2" style="padding:12px 0;color:#0d2f3e;line-height:22px">' . nl2br(h($valor)) . '</td></tr>';
     }
 }
 $texto .= "\nResponder pelo WhatsApp: {$waLead}\n";
-
-$linhas = '';
-foreach ($secoes as $titulo => $itens) {
-    $linhas .= '<tr><td colspan="2" style="padding:24px 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#2c6d82;font-weight:700;border-bottom:1px solid #d5e0e5">' . h($titulo) . '</td></tr>';
-    foreach ($itens as $rotulo => $valor) {
-        if ($valor === '') { continue; }
-        $linhas .= '<tr><td style="padding:8px 16px 8px 0;width:180px;color:#50666f;vertical-align:top">' . h($rotulo) . '</td><td style="padding:8px 0;color:#0d2f3e;font-weight:600;vertical-align:top">' . h($valor) . '</td></tr>';
-    }
-    if ($titulo === 'Interesse' && $lead['mensagem'] !== '') {
-        $linhas .= '<tr><td colspan="2" style="padding:24px 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#2c6d82;font-weight:700;border-bottom:1px solid #d5e0e5">Mensagem</td></tr>';
-        $linhas .= '<tr><td colspan="2" style="padding:12px 0;color:#0d2f3e;line-height:22px">' . nl2br(h($lead['mensagem'])) . '</td></tr>';
-    }
-}
 $html = '<!doctype html><html lang="pt-BR"><body style="margin:0;padding:24px;background:#f1f6f8;font-family:Arial,Helvetica,sans-serif;font-size:14px">'
     . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden">'
     . '<tr><td style="background:#0d2f3e;padding:24px 32px;color:#ffffff"><div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#afc3ca">Site RBS · Credenciamento</div>'

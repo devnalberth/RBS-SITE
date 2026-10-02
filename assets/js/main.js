@@ -305,12 +305,37 @@ const CONFIG = {
 
   /* ---------- formulário ---------- */
   const ADM_NAMES = { bradesco: 'Bradesco Consórcios', embracon: 'Embracon', volkswagen: 'Volkswagen Consórcio' };
+  const ADM_UNDECIDED = 'Ainda não sei';
+
+  // Dados de cadastro que cada administradora pede, na ordem em que chegam: [rótulo, campo]
+  const LAYOUTS = {
+    padrao: {
+      empresa: [['Razão social', 'razao_social'], ['CNPJ', 'cnpj'], ['Telefone', 'telefone_empresa'], ['E-mail do sócio administrador', 'email_socio_admin'], ['Chave Pix', 'chave_pix']],
+      socios: 'Dados do Sócio',
+      socio: [['Nome', 'nome'], ['CPF', 'cpf'], ['E-mail do responsável', 'email'], ['Telefone', 'whatsapp']],
+    },
+    volkswagen: {
+      empresa: [['CNPJ', 'cnpj'], ['Razão social', 'razao_social'], ['Telefone', 'telefone_empresa'], ['E-mail', 'email_socio_admin'], ['Endereço', 'endereco'], ['Número', 'numero'], ['Complemento', 'complemento'], ['Bairro', 'bairro'], ['Cidade', 'cidade_empresa'], ['Estado', 'estado'], ['CEP', 'cep'], ['Nº de inscrição municipal', 'inscricao_municipal'], ['Nome do conselho', 'conselho'], ['Nº de inscrição no conselho', 'numero_conselho']],
+      socios: 'Dados dos Sócios',
+      socio: [['Nome completo do sócio responsável', 'nome'], ['E-mail', 'email'], ['Telefone', 'whatsapp'], ['RG', 'rg'], ['CPF', 'cpf']],
+    },
+  };
+  const SOCIO_EXTRA = [['Nome completo', 'socio_nome[]'], ['E-mail', 'socio_email[]'], ['Telefone', 'socio_telefone[]'], ['RG', 'socio_rg[]'], ['CPF', 'socio_cpf[]']];
+  const MAX_SOCIOS_EXTRA = 5;
+
+  // Volkswagen pede o cadastro completo; Bradesco, Embracon ou nenhuma escolhida usam o padrão
+  const layoutsFor = (slugs) => {
+    const volkswagen = slugs.includes('volkswagen');
+    return { volkswagen, padrao: !volkswagen || slugs.some((s) => s !== 'volkswagen') };
+  };
+  const slugsOf = (names) => Object.keys(ADM_NAMES).filter((k) => names.includes(ADM_NAMES[k]));
 
   function preselectAdm(form, adm) {
     const box = $(`[data-adm-check="${adm}"]`, form);
     if (box) box.checked = true;
     const origin = $('input[name="administradora_origem"]', form);
     if (origin) origin.value = ADM_NAMES[adm] || '';
+    updateCnpjFields(form);
   }
 
   function resetForm(form) {
@@ -345,10 +370,11 @@ const CONFIG = {
     phone: maskPhone,
     cnpj: (v) => formatBy(cnpjChars(v), '##.###.###/####-##'),
     cpf: (v) => formatBy(v.replace(/\D/g, '').slice(0, 11), '###.###.###-##'),
+    cep: (v) => formatBy(v.replace(/\D/g, '').slice(0, 8), '#####-###'),
   };
-  $$('[data-mask]').forEach((inp) => {
-    const mask = MASKS[inp.dataset.mask];
-    if (mask) inp.addEventListener('input', () => { inp.value = mask(inp.value); });
+  document.addEventListener('input', (e) => {
+    const mask = MASKS[e.target.dataset?.mask];
+    if (mask) e.target.value = mask(e.target.value);
   });
 
   const checkDigit = (nums, weights) => {
@@ -379,13 +405,85 @@ const CONFIG = {
     $$('input, select, textarea', field).forEach((c) => c.setAttribute('aria-invalid', msg ? 'true' : 'false'));
   };
 
-  const toggleCnpjFields = (form) => {
+  const updateCnpjFields = (form) => {
     const group = $('[data-cnpj-fields]', form);
     if (!group) return;
     const on = $('input[name="possui_cnpj"]:checked', form)?.value === 'Sim';
+    const layouts = layoutsFor($$('[data-adm-check]:checked', form).map((c) => c.dataset.admCheck));
     group.hidden = !on;
-    $$('input', group).forEach((inp) => { inp.disabled = !on; });
-    if (!on) $$('[data-field]', group).forEach((f) => setError(form, f.dataset.field, ''));
+    $$('[data-layout]', group).forEach((el) => { el.hidden = !layouts[el.dataset.layout]; });
+    $$('input, select', group).forEach((inp) => {
+      inp.disabled = !on || !!inp.closest('[data-layout][hidden]');
+      if (inp.disabled) setError(form, inp.closest('[data-field]')?.dataset.field, '');
+    });
+  };
+
+  let socioSeq = 0;
+  const renumberSocios = (form) => {
+    const boxes = $$('[data-socio]', form);
+    boxes.forEach((box, i) => {
+      $('[data-socio-title]', box).textContent = `Sócio ${i + 2}`;
+      box.setAttribute('aria-label', `Sócio ${i + 2}`);
+      $('[data-remove-socio]', box).setAttribute('aria-label', `Remover sócio ${i + 2}`);
+    });
+    const add = $('[data-add-socio]', form);
+    if (add) add.hidden = boxes.length >= MAX_SOCIOS_EXTRA;
+  };
+  const addSocio = (form) => {
+    const list = $('[data-socios]', form);
+    if (!list || $$('[data-socio]', list).length >= MAX_SOCIOS_EXTRA) return;
+    const n = ++socioSeq;
+    const field = (label, name, attrs, full = false) => `<div class="rbs-field${full ? ' is-full' : ''}" data-field="socio${n}_${name}"><label class="rbs-label" for="socio${n}-${name}">${label}</label><input class="rbs-input" id="socio${n}-${name}" name="socio_${name}[]" ${attrs} required aria-describedby="socio${n}-${name}-err"><span class="rbs-error" id="socio${n}-${name}-err" hidden></span></div>`;
+    const box = document.createElement('div');
+    box.className = 'rbs-socio';
+    box.dataset.socio = '';
+    box.setAttribute('role', 'group');
+    box.innerHTML = '<div class="rbs-socio__head is-full"><span data-socio-title></span><button type="button" class="rbs-socio__remove" data-remove-socio>Remover</button></div>'
+      + field('Nome completo', 'nome', 'type="text"', true)
+      + field('E-mail', 'email', 'type="email"')
+      + field('Telefone', 'telefone', 'type="tel" inputmode="numeric" maxlength="15" data-mask="phone"')
+      + field('RG', 'rg', 'type="text" maxlength="20"')
+      + field('CPF', 'cpf', 'type="text" inputmode="numeric" maxlength="14" data-mask="cpf"');
+    list.append(box);
+    renumberSocios(form);
+    $('input', box).focus();
+  };
+
+  const fillAddress = async (input) => {
+    const cep = input.value.replace(/\D/g, '');
+    if (cep.length !== 8 || input.dataset.cep === cep) return;
+    input.dataset.cep = cep;
+    try {
+      const data = await (await fetch(`https://viacep.com.br/ws/${cep}/json/`)).json();
+      if (data.erro) return;
+      [['endereco', 'logradouro'], ['bairro', 'bairro'], ['cidade_empresa', 'localidade'], ['estado', 'uf']].forEach(([name, key]) => {
+        const el = input.form.elements[name];
+        if (!el || !data[key] || (el.value && !el.dataset.auto)) return;
+        el.value = data[key];
+        el.dataset.auto = '1';
+        setError(input.form, el.closest('[data-field]').dataset.field, '');
+      });
+    } catch (e) { /* segue com o preenchimento manual */ }
+  };
+
+  const validateGroup = (form, errors) => {
+    $$('[data-cnpj-fields] [data-field]', form).forEach((field) => {
+      const input = $('input, select', field);
+      if (!input || input.disabled) return;
+      const key = field.dataset.field;
+      const v = input.value.trim();
+      const digits = v.replace(/\D/g, '');
+      if (!v) {
+        if (input.required) errors[key] = input.tagName === 'SELECT' ? 'Selecione uma opção.' : 'Preencha este campo.';
+        return;
+      }
+      const mask = input.dataset.mask;
+      if (mask === 'cnpj' && !validCnpj(v)) errors[key] = 'Informe um CNPJ válido.';
+      else if (mask === 'cpf' && !validCpf(v)) errors[key] = 'Informe um CPF válido.';
+      else if (mask === 'cep' && digits.length !== 8) errors[key] = 'Informe o CEP com 8 dígitos.';
+      else if (mask === 'phone' && (digits.length < 10 || digits.length > 11)) errors[key] = 'Informe o DDD e o número.';
+      else if (input.type === 'email' && !EMAIL_RE.test(v)) errors[key] = 'Informe um e-mail válido.';
+    });
   };
 
   const validate = (form) => {
@@ -401,41 +499,60 @@ const CONFIG = {
     if (!fd.get('perfil')) errors.perfil = 'Selecione o seu perfil profissional.';
     if (!fd.get('possui_cnpj')) errors.cnpj = 'Escolha sim ou não.';
     if (!fd.get('atua_consorcio')) errors.atua = 'Escolha sim ou não.';
-    if (fd.get('possui_cnpj') === 'Sim') {
-      const telEmpresa = (fd.get('telefone_empresa') || '').replace(/\D/g, '');
-      const emailSocio = (fd.get('email_socio_admin') || '').trim();
-      if ((fd.get('razao_social') || '').trim().length < 3) errors.razao_social = 'Informe a razão social da empresa.';
-      if (!validCnpj(fd.get('cnpj') || '')) errors.cnpj_numero = 'Informe um CNPJ válido.';
-      if (telEmpresa && (telEmpresa.length < 10 || telEmpresa.length > 11)) errors.telefone_empresa = 'Informe o DDD e o número.';
-      if (emailSocio && !EMAIL_RE.test(emailSocio)) errors.email_socio = 'Informe um e-mail válido.';
-      if (!validCpf(fd.get('cpf') || '')) errors.cpf = 'Informe um CPF válido.';
-    }
+    validateGroup(form, errors);
     if (!fd.get('consentimento')) errors.consentimento = 'Para seguir, autorize o contato da RBS.';
-    ['nome', 'whatsapp', 'email', 'cidade', 'perfil', 'cnpj', 'atua', 'razao_social', 'cnpj_numero', 'telefone_empresa', 'email_socio', 'cpf', 'consentimento'].forEach((k) => setError(form, k, errors[k]));
+    const groupKeys = $$('[data-cnpj-fields] [data-field]', form).map((f) => f.dataset.field);
+    ['nome', 'whatsapp', 'email', 'cidade', 'perfil', 'cnpj', 'atua', ...groupKeys, 'consentimento'].forEach((k) => setError(form, k, errors[k]));
     return errors;
   };
 
-  const buildMessage = (fd) => {
+  const admLabelOf = (fd) => fd.getAll('administradoras').filter((a) => a !== ADM_UNDECIDED).join(', ')
+    || (fd.get('administradora_origem') || '').trim() || 'A definir';
+
+  const buildSections = (fd) => {
     const val = (k) => (fd.get(k) || '').trim();
-    const adms = fd.getAll('administradoras');
-    const block = (title, rows) => {
-      const filled = rows.filter(([, v]) => v);
-      return filled.length ? ['', `*${title}*`, ...filled.map(([k, v]) => `${k}: ${v}`)] : [];
-    };
-    const admLabel = adms.filter((a) => a !== 'Ainda não sei').join(', ') || val('administradora_origem') || 'A definir';
-    const lines = [
-      'Olá, Rodrigo! Acabei de enviar minha solicitação de credenciamento pelo site da RBS.',
-      '',
-      `*CREDENCIAMENTO: ${admLabel.toUpperCase()}*`,
-      ...block('CONTATO', [['Nome', val('nome')], ['CPF', val('cpf')], ['WhatsApp', val('whatsapp')], ['E-mail', val('email')], ['Cidade/UF', val('cidade')]]),
-      ...block('EMPRESA', [['Razão social', val('razao_social')], ['Nome fantasia', val('nome_fantasia')], ['CNPJ', val('cnpj')], ['Telefone', val('telefone_empresa')], ['E-mail do sócio administrador', val('email_socio_admin')], ['Chave Pix', val('chave_pix')]]),
-      ...block('PERFIL', [['Perfil profissional', val('perfil')], ['Possui CNPJ', val('possui_cnpj')], ['Já atua com consórcio', val('atua_consorcio')], ['Tamanho da equipe', val('tamanho_equipe')]]),
-    ];
-    if (val('mensagem')) lines.push('', '*MENSAGEM*', val('mensagem'));
-    return lines.join('\n');
+    const rows = (pairs) => pairs.map(([label, name]) => [label, val(name)]);
+    const sections = [];
+    if (val('possui_cnpj') === 'Sim') {
+      const layouts = layoutsFor(slugsOf(fd.getAll('administradoras')));
+      const layout = layouts.volkswagen ? LAYOUTS.volkswagen : LAYOUTS.padrao;
+      const empresa = layouts.volkswagen && layouts.padrao ? [...layout.empresa, ['Chave Pix', 'chave_pix']] : layout.empresa;
+      sections.push({ title: 'Dados da Empresa', rows: rows(empresa) });
+      sections.push({ title: layout.socios, rows: rows(layout.socio) });
+      if (layouts.volkswagen) {
+        fd.getAll('socio_nome[]').forEach((_, i) => {
+          sections.push({ title: `Sócio ${i + 2}`, rows: SOCIO_EXTRA.map(([label, name]) => [label, (fd.getAll(name)[i] || '').trim()]) });
+        });
+      }
+      sections.push({ title: 'Perfil', rows: rows([['Cidade/UF', 'cidade'], ['Perfil profissional', 'perfil'], ['Já atua com consórcio', 'atua_consorcio'], ['Tamanho da equipe', 'tamanho_equipe']]) });
+    } else {
+      sections.push({ title: 'Contato', rows: rows([['Nome', 'nome'], ['WhatsApp', 'whatsapp'], ['E-mail', 'email'], ['Cidade/UF', 'cidade']]) });
+      sections.push({ title: 'Perfil', rows: rows([['Perfil profissional', 'perfil'], ['Possui CNPJ', 'possui_cnpj'], ['Já atua com consórcio', 'atua_consorcio'], ['Tamanho da equipe', 'tamanho_equipe']]) });
+    }
+    if (val('mensagem')) sections.push({ title: 'Mensagem', rows: [['', val('mensagem')]] });
+    return sections
+      .map((s) => ({ ...s, rows: s.rows.filter(([, v]) => v) }))
+      .filter((s) => s.rows.length);
   };
 
-  const send = async (fd) => {
+  const buildMessage = (adm, sections) => [
+    'Olá, Rodrigo! Acabei de enviar minha solicitação de credenciamento pelo site da RBS.',
+    '',
+    `*CREDENCIAMENTO: ${adm.toUpperCase()}*`,
+    ...sections.flatMap(({ title, rows }) => ['', `*${title}*`, ...rows.map(([k, v]) => (k ? `${k}: ${v}` : v))]),
+  ].join('\n');
+
+  const docsTemplate = (slug) => {
+    const layout = slug === 'volkswagen' ? LAYOUTS.volkswagen : LAYOUTS.padrao;
+    const blanks = (pairs) => pairs.map(([label]) => `${label}:`);
+    return [
+      `ADMINISTRADORA: ${ADM_NAMES[slug].toUpperCase()}`, '',
+      'DADOS DA EMPRESA', ...blanks(layout.empresa), '',
+      `${layout.socios.toUpperCase()}${slug === 'volkswagen' ? ' (repita para cada sócio)' : ''}`, ...blanks(layout.socio),
+    ].join('\n');
+  };
+
+  const send = async (fd, resumo) => {
     if (!CONFIG.formEndpoint) return;
     const url = /^https?:/.test(CONFIG.formEndpoint) ? CONFIG.formEndpoint : rootPath + CONFIG.formEndpoint;
     const ctrl = new AbortController();
@@ -444,6 +561,7 @@ const CONFIG = {
       const body = new FormData();
       fd.forEach((v, k) => { if (k !== 'administradoras') body.append(k, v); });
       body.append('administradoras', fd.getAll('administradoras').join(', '));
+      body.append('resumo', JSON.stringify(resumo));
       await fetch(url, { method: 'POST', body, signal: ctrl.signal, headers: { Accept: 'application/json' } });
     } catch (e) {
       // o WhatsApp segue abrindo mesmo se o registro falhar
@@ -456,10 +574,22 @@ const CONFIG = {
       const field = e.target.closest('[data-field]');
       if (field && field.classList.contains('is-error')) setError(form, field.dataset.field, '');
     };
-    form.addEventListener('input', clearOn);
+    form.addEventListener('input', (e) => {
+      clearOn(e);
+      delete e.target.dataset.auto;
+      if (e.target.dataset.mask === 'cep') fillAddress(e.target);
+    });
     form.addEventListener('change', clearOn);
-    form.addEventListener('change', (e) => { if (e.target.name === 'possui_cnpj') toggleCnpjFields(form); });
-    toggleCnpjFields(form);
+    form.addEventListener('change', (e) => { if (['possui_cnpj', 'administradoras'].includes(e.target.name)) updateCnpjFields(form); });
+    form.addEventListener('click', (e) => {
+      if (e.target.closest('[data-add-socio]')) addSocio(form);
+      const remove = e.target.closest('[data-remove-socio]');
+      if (!remove) return;
+      remove.closest('[data-socio]').remove();
+      renumberSocios(form);
+      $('[data-add-socio]', form)?.focus();
+    });
+    updateCnpjFields(form);
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -478,9 +608,11 @@ const CONFIG = {
       $('input[name="pagina"]', form).value = location.href;
       ['utm_source', 'utm_medium', 'utm_campaign'].forEach((k) => { $(`input[name="${k}"]`, form).value = store.get(k) || ''; });
       const fd = new FormData(form);
-      await send(fd);
+      const adm = admLabelOf(fd);
+      const sections = buildSections(fd);
+      await send(fd, { administradora: adm, secoes: sections });
 
-      const link = waLink(buildMessage(fd));
+      const link = waLink(buildMessage(adm, sections));
       const success = $('[data-form-success]', form.parentElement);
       $('[data-success-wa]', success).href = link;
       form.hidden = true;
@@ -489,7 +621,9 @@ const CONFIG = {
       submit.disabled = false;
       submit.firstChild.textContent = 'Solicitar credenciamento';
       form.reset();
-      toggleCnpjFields(form);
+      $$('[data-socio]', form).forEach((box) => box.remove());
+      renumberSocios(form);
+      updateCnpjFields(form);
 
       // evento para GTM / Meta Pixel
       window.dataLayer = window.dataLayer || [];
@@ -528,11 +662,12 @@ const CONFIG = {
       if (nameEl) nameEl.textContent = name;
       if (waBtn) waBtn.href = waLink(`Olá, Rodrigo! Quero me credenciar para atuar com ${tab.dataset.tab === 'embracon' ? 'a' : tab.dataset.tab === 'bradesco' ? 'o' : 'a'} ${name} pela estrutura RBS. Pode me orientar sobre a documentação?`);
       if (mailBtn) mailBtn.href = mailLink(`Credenciamento | ${name} | [Razão social]`,
-        `Olá, equipe RBS!\n\nSegue a documentação para análise de credenciamento.\n\nADMINISTRADORA: ${name.toUpperCase()}\n\nDADOS DA EMPRESA\nCNPJ:\nRazão social:\nNome fantasia:\nTelefone:\nE-mail:\nEndereço:\nNúmero:\nComplemento:\nBairro:\nCidade:\nEstado:\nCEP:\nNº de inscrição municipal:\nNome do conselho:\nNº de inscrição no conselho:\nChave Pix:\n\nDADOS DOS SÓCIOS (repita para cada sócio)\nNome completo:\nE-mail:\nTelefone:\nRG:\nCPF:\n\nDocumentos em anexo.`);
+        `Olá, equipe RBS!\n\nSegue a documentação para análise de credenciamento.\n\n${docsTemplate(tab.dataset.tab)}\n\nDocumentos em anexo.`);
       if (pageForm) {
         $$('[data-adm-check]', pageForm).forEach((c) => { c.checked = c.dataset.admCheck === tab.dataset.tab; });
         const origin = $('input[name="administradora_origem"]', pageForm);
         if (origin) origin.value = name;
+        updateCnpjFields(pageForm);
       }
       if (focus) tab.focus();
       if (updateHash && history.replaceState) history.replaceState(null, '', `#${tab.dataset.tab}`);
