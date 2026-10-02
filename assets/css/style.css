@@ -46,6 +46,7 @@
   /* overlays */
   --overlay-hero: linear-gradient(90deg, rgba(13, 47, 62, .92) 0%, rgba(13, 47, 62, .75) 45%, rgba(13, 47, 62, .30) 100%);
   --overlay-card: linear-gradient(180deg, rgba(13, 47, 62, .10) 30%, rgba(13, 47, 62, .90) 100%);
+  --overlay-split: linear-gradient(90deg, rgba(13, 47, 62, .72) 0%, rgba(13, 47, 62, .42) 45%, rgba(13, 47, 62, .12) 100%), linear-gradient(180deg, rgba(13, 47, 62, 0) 55%, rgba(13, 47, 62, .45) 100%);
 
   color-scheme: light;
 }
@@ -267,6 +268,7 @@ section[id], [id].anchor { scroll-margin-top: calc(var(--header-h) + var(--heade
 /* ---------- para quem é (acordeão) ---------- */
 .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-16); align-items: start; }
 .split__media { position: sticky; top: calc(var(--header-h) + var(--header-top) + 24px); aspect-ratio: 4 / 5; max-width: 100%; }
+.split__media::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: var(--overlay-split); }
 .rbs-acc__item { border-bottom: 1px solid var(--cinza-200); }
 .rbs-acc__item summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-6) 0; cursor: pointer; font-size: 20px; line-height: 28px; font-weight: 600; color: var(--azul-800); }
 .rbs-acc__item summary::-webkit-details-marker { display: none; }
