@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="/assets/css/style.css?v=13">
+<link rel="stylesheet" href="/assets/css/style.css?v=15">
 <link rel="stylesheet" href="/assets/css/contempladas.css?v=2">
 </head>
 <body>
@@ -136,6 +136,16 @@
   <div class="rbs-field is-full" data-field="perfil"><label class="rbs-label" for="dlg-perfil">Perfil profissional</label><div class="rbs-selectwrap"><select class="rbs-select" id="dlg-perfil" name="perfil" required aria-describedby="dlg-perfil-err"><option value="">Selecione</option><option>Consultor de consórcio</option><option>Corretor de imóveis ou seguros</option><option>Escritório de consórcio</option><option>Empresa ou equipe comercial</option><option>Outro</option></select><svg class="ico" aria-hidden="true"><use href="#i-down"/></svg></div><span class="rbs-error" id="dlg-perfil-err" hidden></span></div>
   <fieldset class="rbs-field" data-field="cnpj"><legend>Possui CNPJ?</legend><div class="rbs-choices"><label class="rbs-choice"><input type="radio" name="possui_cnpj" value="Sim" required> Sim</label><label class="rbs-choice"><input type="radio" name="possui_cnpj" value="Não" required> Não</label></div><span class="rbs-error" id="dlg-cnpj-err" hidden></span></fieldset>
   <fieldset class="rbs-field" data-field="atua"><legend>Já atua com consórcio?</legend><div class="rbs-choices"><label class="rbs-choice"><input type="radio" name="atua_consorcio" value="Sim" required> Sim</label><label class="rbs-choice"><input type="radio" name="atua_consorcio" value="Não" required> Não</label></div><span class="rbs-error" id="dlg-atua-err" hidden></span></fieldset>
+  <div class="rbs-form__group" data-cnpj-fields hidden>
+    <p class="rbs-form__group-title is-full">Dados da empresa e do sócio <span>Necessários para o cadastro nas administradoras.</span></p>
+    <div class="rbs-field is-full" data-field="razao_social"><label class="rbs-label" for="dlg-razao">Razão social</label><input class="rbs-input" id="dlg-razao" name="razao_social" type="text" placeholder="Como consta no cartão CNPJ" autocomplete="organization" required disabled aria-describedby="dlg-razao-err"><span class="rbs-error" id="dlg-razao-err" hidden></span></div>
+    <div class="rbs-field" data-field="nome_fantasia"><label class="rbs-label" for="dlg-fantasia">Nome fantasia <small>(opcional)</small></label><input class="rbs-input" id="dlg-fantasia" name="nome_fantasia" type="text" placeholder="Nome fantasia" disabled aria-describedby="dlg-fantasia-err"><span class="rbs-error" id="dlg-fantasia-err" hidden></span></div>
+    <div class="rbs-field" data-field="cnpj_numero"><label class="rbs-label" for="dlg-cnpj-num">CNPJ</label><input class="rbs-input" id="dlg-cnpj-num" name="cnpj" type="text" placeholder="00.000.000/0000-00" autocapitalize="characters" maxlength="18" data-mask="cnpj" required disabled aria-describedby="dlg-cnpj-num-err"><span class="rbs-error" id="dlg-cnpj-num-err" hidden></span></div>
+    <div class="rbs-field" data-field="telefone_empresa"><label class="rbs-label" for="dlg-tel-empresa">Telefone da empresa <small>(opcional)</small></label><input class="rbs-input" id="dlg-tel-empresa" name="telefone_empresa" type="tel" placeholder="(00) 0000-0000" inputmode="numeric" maxlength="15" data-mask="phone" disabled aria-describedby="dlg-tel-empresa-err"><span class="rbs-error" id="dlg-tel-empresa-err" hidden></span></div>
+    <div class="rbs-field" data-field="email_socio"><label class="rbs-label" for="dlg-email-socio">E-mail do sócio administrador <small>(opcional)</small></label><input class="rbs-input" id="dlg-email-socio" name="email_socio_admin" type="email" placeholder="socio@empresa.com.br" disabled aria-describedby="dlg-email-socio-err"><span class="rbs-error" id="dlg-email-socio-err" hidden></span></div>
+    <div class="rbs-field" data-field="chave_pix"><label class="rbs-label" for="dlg-pix">Chave Pix <small>(opcional)</small></label><input class="rbs-input" id="dlg-pix" name="chave_pix" type="text" placeholder="CNPJ, e-mail, telefone ou chave aleatória" disabled aria-describedby="dlg-pix-err"><span class="rbs-error" id="dlg-pix-err" hidden></span></div>
+    <div class="rbs-field" data-field="cpf"><label class="rbs-label" for="dlg-cpf">CPF do sócio responsável</label><input class="rbs-input" id="dlg-cpf" name="cpf" type="text" placeholder="000.000.000-00" inputmode="numeric" maxlength="14" data-mask="cpf" required disabled aria-describedby="dlg-cpf-err"><span class="rbs-error" id="dlg-cpf-err" hidden></span></div>
+  </div>
   <fieldset class="rbs-field is-full" data-field="administradoras"><legend>Administradoras de interesse <small>(opcional)</small></legend><div class="rbs-choices"><label class="rbs-choice"><input type="checkbox" name="administradoras" value="Bradesco Consórcios" data-adm-check="bradesco"> Bradesco Consórcios</label><label class="rbs-choice"><input type="checkbox" name="administradoras" value="Embracon" data-adm-check="embracon"> Embracon</label><label class="rbs-choice"><input type="checkbox" name="administradoras" value="Volkswagen Consórcio" data-adm-check="volkswagen"> Volkswagen Consórcio</label><label class="rbs-choice"><input type="checkbox" name="administradoras" value="Ainda não sei"> Ainda não sei</label></div></fieldset>
   <div class="rbs-field is-full" data-field="equipe"><label class="rbs-label" for="dlg-equipe">Tamanho da equipe <small>(opcional)</small></label><div class="rbs-selectwrap"><select class="rbs-select" id="dlg-equipe" name="tamanho_equipe" aria-describedby="dlg-equipe-err"><option value="">Selecione</option><option>Só eu</option><option>2 a 5</option><option>6 a 15</option><option>Mais de 15</option></select><svg class="ico" aria-hidden="true"><use href="#i-down"/></svg></div><span class="rbs-error" id="dlg-equipe-err" hidden></span></div>
   <div class="rbs-field is-full" data-field="mensagem"><label class="rbs-label" for="dlg-mensagem">Mensagem <small>(opcional)</small></label><textarea class="rbs-textarea" id="dlg-mensagem" name="mensagem" placeholder="Conte algo que ajude na análise do seu perfil"></textarea></div>
@@ -158,7 +168,7 @@
 </div>
   </div>
 </dialog>
-<script src="/assets/js/main.js?v=8" defer></script>
+<script src="/assets/js/main.js?v=10" defer></script>
 <script src="/assets/js/catalog.js?v=2" defer></script>
 </body>
 </html>

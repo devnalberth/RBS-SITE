@@ -44,6 +44,13 @@ $lead = [
     'cidade'        => campo('cidade'),
     'perfil'        => campo('perfil'),
     'possui_cnpj'   => campo('possui_cnpj', 5),
+    'razao_social'  => campo('razao_social'),
+    'nome_fantasia' => campo('nome_fantasia'),
+    'cnpj'          => campo('cnpj', 18),
+    'telefone_empresa' => campo('telefone_empresa', 20),
+    'email_socio_admin' => campo('email_socio_admin'),
+    'chave_pix'     => campo('chave_pix', 120),
+    'cpf'           => campo('cpf', 14),
     'atua_consorcio'=> campo('atua_consorcio', 5),
     'administradoras' => campo('administradoras'),
     'tamanho_equipe'=> campo('tamanho_equipe', 30),
@@ -83,9 +90,18 @@ $recebido = date('d/m/Y \à\s H:i');
 $secoes = [
     'Contato' => [
         'Nome'      => $lead['nome'],
+        'CPF'       => $lead['cpf'],
         'WhatsApp'  => $lead['whatsapp'],
         'E-mail'    => $lead['email'],
         'Cidade/UF' => $lead['cidade'],
+    ],
+    'Empresa' => [
+        'Razão social'  => $lead['razao_social'],
+        'Nome fantasia' => $lead['nome_fantasia'],
+        'CNPJ'          => $lead['cnpj'],
+        'Telefone'      => $lead['telefone_empresa'],
+        'E-mail do sócio administrador' => $lead['email_socio_admin'],
+        'Chave Pix'     => $lead['chave_pix'],
     ],
     'Perfil' => [
         'Perfil profissional'   => $lead['perfil'],
@@ -106,9 +122,12 @@ $secoes = [
         'Consentimento LGPD' => 'Sim',
     ],
 ];
+if ($lead['possui_cnpj'] !== 'Sim') { unset($secoes['Empresa']); }
 $waLead = 'https://wa.me/55' . $tel;
+$admEscolhidas = array_filter(array_map('trim', explode(',', $lead['administradoras'])), fn($a) => $a !== '' && $a !== 'Ainda não sei');
+$adm = implode(', ', $admEscolhidas) ?: ($lead['administradora_origem'] ?: 'A definir');
 
-$texto = "NOVA SOLICITAÇÃO DE CREDENCIAMENTO\nRecebida em {$recebido}\n";
+$texto = "NOVA SOLICITAÇÃO DE CREDENCIAMENTO\nAdministradora: {$adm}\nRecebida em {$recebido}\n";
 foreach ($secoes as $titulo => $itens) {
     $texto .= "\n" . mb_strtoupper($titulo) . "\n";
     foreach ($itens as $rotulo => $valor) {
@@ -135,6 +154,7 @@ foreach ($secoes as $titulo => $itens) {
 $html = '<!doctype html><html lang="pt-BR"><body style="margin:0;padding:24px;background:#f1f6f8;font-family:Arial,Helvetica,sans-serif;font-size:14px">'
     . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden">'
     . '<tr><td style="background:#0d2f3e;padding:24px 32px;color:#ffffff"><div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#afc3ca">Site RBS · Credenciamento</div>'
+    . '<div style="display:inline-block;margin-top:12px;padding:6px 14px;border-radius:999px;background:#ffffff;color:#0d2f3e;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase">' . h($adm) . '</div>'
     . '<div style="font-size:22px;font-weight:700;margin-top:6px">' . h($lead['nome']) . '</div>'
     . '<div style="color:#afc3ca;margin-top:4px">' . h($lead['cidade']) . ' · ' . h($lead['perfil']) . '</div></td></tr>'
     . '<tr><td style="padding:8px 32px 24px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">' . $linhas . '</table>'
@@ -142,7 +162,7 @@ $html = '<!doctype html><html lang="pt-BR"><body style="margin:0;padding:24px;ba
     . ' &nbsp; <a href="mailto:' . h($lead['email']) . '" style="color:#1d566b;font-weight:600">Responder por e-mail</a></p>'
     . '</td></tr></table></body></html>';
 
-$assunto = 'Credenciamento | ' . $lead['nome'] . ' | ' . $lead['cidade'];
+$assunto = 'Credenciamento ' . $adm . ' | ' . $lead['nome'] . ' | ' . $lead['cidade'];
 $limite = 'rbs-' . bin2hex(random_bytes(8));
 $corpo = "--{$limite}\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
     . chunk_split(base64_encode($texto))

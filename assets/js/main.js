@@ -330,7 +330,45 @@ const CONFIG = {
     if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
     return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
   };
-  $$('[data-mask="phone"]').forEach((inp) => inp.addEventListener('input', () => { inp.value = maskPhone(inp.value); }));
+  const formatBy = (chars, pattern) => {
+    let i = 0;
+    let out = '';
+    for (const p of pattern) {
+      if (i >= chars.length) break;
+      out += p === '#' ? chars[i++] : p;
+    }
+    return out;
+  };
+  // CNPJ aceita o formato alfanumérico (Receita Federal, 2026)
+  const cnpjChars = (v) => v.toUpperCase().replace(/[^0-9A-Z]/g, '').slice(0, 14);
+  const MASKS = {
+    phone: maskPhone,
+    cnpj: (v) => formatBy(cnpjChars(v), '##.###.###/####-##'),
+    cpf: (v) => formatBy(v.replace(/\D/g, '').slice(0, 11), '###.###.###-##'),
+  };
+  $$('[data-mask]').forEach((inp) => {
+    const mask = MASKS[inp.dataset.mask];
+    if (mask) inp.addEventListener('input', () => { inp.value = mask(inp.value); });
+  });
+
+  const checkDigit = (nums, weights) => {
+    const r = nums.reduce((sum, n, i) => sum + n * weights[i], 0) % 11;
+    return r < 2 ? 0 : 11 - r;
+  };
+  const validCpf = (v) => {
+    const d = [...v.replace(/\D/g, '')].map(Number);
+    if (d.length !== 11 || d.every((n) => n === d[0])) return false;
+    const w = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+    return checkDigit(d.slice(0, 9), w.slice(1)) === d[9] && checkDigit(d.slice(0, 10), w) === d[10];
+  };
+  const validCnpj = (v) => {
+    const c = cnpjChars(v);
+    if (!/^[0-9A-Z]{12}\d{2}$/.test(c) || /^(.)\1+$/.test(c)) return false;
+    const d = [...c].map((ch) => ch.charCodeAt(0) - 48);
+    const w = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    return checkDigit(d.slice(0, 12), w.slice(1)) === d[12] && checkDigit(d.slice(0, 13), w) === d[13];
+  };
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   const setError = (form, key, msg) => {
     const field = $(`[data-field="${key}"]`, form);
@@ -341,6 +379,15 @@ const CONFIG = {
     $$('input, select, textarea', field).forEach((c) => c.setAttribute('aria-invalid', msg ? 'true' : 'false'));
   };
 
+  const toggleCnpjFields = (form) => {
+    const group = $('[data-cnpj-fields]', form);
+    if (!group) return;
+    const on = $('input[name="possui_cnpj"]:checked', form)?.value === 'Sim';
+    group.hidden = !on;
+    $$('input', group).forEach((inp) => { inp.disabled = !on; });
+    if (!on) $$('[data-field]', group).forEach((f) => setError(form, f.dataset.field, ''));
+  };
+
   const validate = (form) => {
     const fd = new FormData(form);
     const errors = {};
@@ -349,13 +396,22 @@ const CONFIG = {
     const email = (fd.get('email') || '').trim();
     if (nome.length < 3) errors.nome = 'Informe seu nome completo.';
     if (tel.length < 10 || tel.length > 11) errors.whatsapp = 'Informe o DDD e o número, com 10 ou 11 dígitos.';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) errors.email = 'Informe um e-mail válido, como nome@empresa.com.br.';
+    if (!EMAIL_RE.test(email)) errors.email = 'Informe um e-mail válido, como nome@empresa.com.br.';
     if (!(fd.get('cidade') || '').trim()) errors.cidade = 'Informe sua cidade e estado.';
     if (!fd.get('perfil')) errors.perfil = 'Selecione o seu perfil profissional.';
     if (!fd.get('possui_cnpj')) errors.cnpj = 'Escolha sim ou não.';
     if (!fd.get('atua_consorcio')) errors.atua = 'Escolha sim ou não.';
+    if (fd.get('possui_cnpj') === 'Sim') {
+      const telEmpresa = (fd.get('telefone_empresa') || '').replace(/\D/g, '');
+      const emailSocio = (fd.get('email_socio_admin') || '').trim();
+      if ((fd.get('razao_social') || '').trim().length < 3) errors.razao_social = 'Informe a razão social da empresa.';
+      if (!validCnpj(fd.get('cnpj') || '')) errors.cnpj_numero = 'Informe um CNPJ válido.';
+      if (telEmpresa && (telEmpresa.length < 10 || telEmpresa.length > 11)) errors.telefone_empresa = 'Informe o DDD e o número.';
+      if (emailSocio && !EMAIL_RE.test(emailSocio)) errors.email_socio = 'Informe um e-mail válido.';
+      if (!validCpf(fd.get('cpf') || '')) errors.cpf = 'Informe um CPF válido.';
+    }
     if (!fd.get('consentimento')) errors.consentimento = 'Para seguir, autorize o contato da RBS.';
-    ['nome', 'whatsapp', 'email', 'cidade', 'perfil', 'cnpj', 'atua', 'consentimento'].forEach((k) => setError(form, k, errors[k]));
+    ['nome', 'whatsapp', 'email', 'cidade', 'perfil', 'cnpj', 'atua', 'razao_social', 'cnpj_numero', 'telefone_empresa', 'email_socio', 'cpf', 'consentimento'].forEach((k) => setError(form, k, errors[k]));
     return errors;
   };
 
@@ -366,11 +422,14 @@ const CONFIG = {
       const filled = rows.filter(([, v]) => v);
       return filled.length ? ['', `*${title}*`, ...filled.map(([k, v]) => `${k}: ${v}`)] : [];
     };
+    const admLabel = adms.filter((a) => a !== 'Ainda não sei').join(', ') || val('administradora_origem') || 'A definir';
     const lines = [
       'Olá, Rodrigo! Acabei de enviar minha solicitação de credenciamento pelo site da RBS.',
-      ...block('CONTATO', [['Nome', val('nome')], ['WhatsApp', val('whatsapp')], ['E-mail', val('email')], ['Cidade/UF', val('cidade')]]),
+      '',
+      `*CREDENCIAMENTO: ${admLabel.toUpperCase()}*`,
+      ...block('CONTATO', [['Nome', val('nome')], ['CPF', val('cpf')], ['WhatsApp', val('whatsapp')], ['E-mail', val('email')], ['Cidade/UF', val('cidade')]]),
+      ...block('EMPRESA', [['Razão social', val('razao_social')], ['Nome fantasia', val('nome_fantasia')], ['CNPJ', val('cnpj')], ['Telefone', val('telefone_empresa')], ['E-mail do sócio administrador', val('email_socio_admin')], ['Chave Pix', val('chave_pix')]]),
       ...block('PERFIL', [['Perfil profissional', val('perfil')], ['Possui CNPJ', val('possui_cnpj')], ['Já atua com consórcio', val('atua_consorcio')], ['Tamanho da equipe', val('tamanho_equipe')]]),
-      ...block('INTERESSE', [['Administradoras', adms.join(', ')]]),
     ];
     if (val('mensagem')) lines.push('', '*MENSAGEM*', val('mensagem'));
     return lines.join('\n');
@@ -399,6 +458,8 @@ const CONFIG = {
     };
     form.addEventListener('input', clearOn);
     form.addEventListener('change', clearOn);
+    form.addEventListener('change', (e) => { if (e.target.name === 'possui_cnpj') toggleCnpjFields(form); });
+    toggleCnpjFields(form);
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -428,6 +489,7 @@ const CONFIG = {
       submit.disabled = false;
       submit.firstChild.textContent = 'Solicitar credenciamento';
       form.reset();
+      toggleCnpjFields(form);
 
       // evento para GTM / Meta Pixel
       window.dataLayer = window.dataLayer || [];
@@ -466,7 +528,7 @@ const CONFIG = {
       if (nameEl) nameEl.textContent = name;
       if (waBtn) waBtn.href = waLink(`Olá, Rodrigo! Quero me credenciar para atuar com ${tab.dataset.tab === 'embracon' ? 'a' : tab.dataset.tab === 'bradesco' ? 'o' : 'a'} ${name} pela estrutura RBS. Pode me orientar sobre a documentação?`);
       if (mailBtn) mailBtn.href = mailLink(`Credenciamento | ${name} | [Razão social]`,
-        'Olá, equipe RBS!\n\nSegue a documentação para análise de credenciamento.\n\nNome do responsável:\nRazão social:\nCNPJ:\nCidade/UF:\nWhatsApp:\n\nDocumentos em anexo.');
+        `Olá, equipe RBS!\n\nSegue a documentação para análise de credenciamento.\n\nADMINISTRADORA: ${name.toUpperCase()}\n\nDADOS DA EMPRESA\nCNPJ:\nRazão social:\nNome fantasia:\nTelefone:\nE-mail:\nEndereço:\nNúmero:\nComplemento:\nBairro:\nCidade:\nEstado:\nCEP:\nNº de inscrição municipal:\nNome do conselho:\nNº de inscrição no conselho:\nChave Pix:\n\nDADOS DOS SÓCIOS (repita para cada sócio)\nNome completo:\nE-mail:\nTelefone:\nRG:\nCPF:\n\nDocumentos em anexo.`);
       if (pageForm) {
         $$('[data-adm-check]', pageForm).forEach((c) => { c.checked = c.dataset.admCheck === tab.dataset.tab; });
         const origin = $('input[name="administradora_origem"]', pageForm);

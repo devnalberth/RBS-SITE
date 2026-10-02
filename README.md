@@ -50,7 +50,7 @@ robots.txt, sitemap.xml     SEO
 
 O fluxo é o mesmo no popup (todos os botões "Quero me credenciar") e no fim da página /credenciamento:
 
-1. Valida os campos (nome, WhatsApp com DDD, e-mail, cidade, perfil, CNPJ, experiência, consentimento).
+1. Valida os campos (nome, WhatsApp com DDD, e-mail, cidade, perfil, CNPJ, experiência, consentimento). Quem marca "Possui CNPJ? Sim" vê o bloco "Dados da empresa e do sócio": razão social, CNPJ (inclusive o alfanumérico) e CPF são obrigatórios e validados pelos dígitos verificadores; nome fantasia, telefone, e-mail do sócio administrador e chave Pix são opcionais.
 2. Envia os dados para `formEndpoint`, que grava o lead e manda o e-mail para a equipe.
 3. Mostra a mensagem de sucesso e abre o WhatsApp de parcerias (`CONFIG.whatsapp`) com os dados já escritos, em blocos: Contato, Perfil, Interesse e Mensagem.
 
