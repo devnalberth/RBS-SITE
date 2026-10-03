@@ -591,7 +591,8 @@ html.has-dialog { overflow: hidden; }
   .grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .split, .method, .faq-layout, .cred { grid-template-columns: minmax(0, 1fr); gap: var(--space-12); }
-  .split__media { position: relative; top: auto; aspect-ratio: 16 / 10; order: -1; }
+  .split__media { position: relative; top: auto; aspect-ratio: 4 / 5; order: -1; }
+  .split__media > video { object-position: center top; }
   .method__intro, .faq-layout__aside, .rbs-next { position: static; }
   .legal { grid-template-columns: minmax(0, 1fr); }
   .legal__toc { display: none; }
@@ -610,6 +611,8 @@ html.has-dialog { overflow: hidden; }
 @media (max-width: 767px) {
   .rbs-form__group { padding: var(--space-4); }
   :root { --section-y: 72px; --gutter: 16px; --header-h: 64px; --header-top: 12px; }
+  #sobre { padding-bottom: 24px; }
+  #parceiros { padding-top: 16px; }
   .rbs-h1 { font-size: 36px; line-height: 44px; }
   .rbs-h2 { font-size: 28px; line-height: 36px; }
   .rbs-h3 { font-size: 20px; line-height: 28px; }

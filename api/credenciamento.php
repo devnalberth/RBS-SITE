@@ -9,8 +9,8 @@ header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 date_default_timezone_set('America/Sao_Paulo');
 
-const DESTINO   = 'rbs.consultoria.inteligente@gmail.com';
-const REMETENTE = 'site@rbsconsultoriainteligente.com.br'; // precisa existir no domínio
+const DESTINO   = 'credenciamento@rbsconsultoriainteligente.com.br';
+const REMETENTE = 'credenciamento@rbsconsultoriainteligente.com.br'; // caixa existente no domínio
 const ARQUIVO   = __DIR__ . '/dados/leads.csv';            // pasta protegida por .htaccess
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

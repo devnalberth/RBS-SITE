@@ -55,7 +55,7 @@ O fluxo é o mesmo no popup (todos os botões "Quero me credenciar") e no fim da
 2. Envia os dados para `formEndpoint`, que grava o lead e manda o e-mail para a equipe.
 3. Mostra a mensagem de sucesso e abre o WhatsApp de parcerias (`CONFIG.whatsapp`) com os dados já escritos, em blocos: Contato, Perfil, Interesse e Mensagem.
 
-`api/credenciamento.php` grava cada lead em `api/dados/leads.csv` (pasta bloqueada ao público) e envia um e-mail para `rbs.consultoria.inteligente@gmail.com` (constante `DESTINO`), separado nas mesmas seções, com a origem do contato (página e UTMs) e botões para responder pelo WhatsApp ou por e-mail. O "Responder" do e-mail já vai para o lead. Crie a caixa `site@rbsconsultoriainteligente.com.br` (ou troque a constante `REMETENTE`) para o e-mail não cair em spam.
+`api/credenciamento.php` grava cada lead em `api/dados/leads.csv` (pasta bloqueada ao público) e envia um e-mail para `credenciamento@rbsconsultoriainteligente.com.br` (constante `DESTINO`), separado nas mesmas seções, com a origem do contato (página e UTMs) e botões para responder pelo WhatsApp ou por e-mail. O "Responder" do e-mail já vai para o lead. O remetente (`REMETENTE`) é a mesma caixa, que já existe no domínio. Mantenha o SPF e o DKIM do domínio ativos na Hostinger para o e-mail não cair em spam.
 
 Os UTMs da URL (`utm_source`, `utm_medium`, `utm_campaign`), a página e a administradora de origem vão junto no envio.
 
