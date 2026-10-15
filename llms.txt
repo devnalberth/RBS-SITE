@@ -45,3 +45,9 @@ A RBS atende parceiros e equipes comerciais, inclusive de outros estados, com ac
 ## Optional
 
 - [Política de Privacidade](https://rbsconsultoriainteligente.com.br/politica-de-privacidade): como a RBS trata os dados coletados pelo site e pelo formulário de credenciamento.
+
+## Páginas das administradoras
+
+- [Embracon](https://rbsconsultoriainteligente.com.br/consorcios/embracon/): conteúdo da administradora com atendimento pela RBS Consultoria Inteligente.
+- [Bradesco Consórcios](https://rbsconsultoriainteligente.com.br/consorcios/bradesco/): conteúdo da administradora com atendimento pela RBS Consultoria Inteligente.
+- [Volkswagen Consórcio](https://rbsconsultoriainteligente.com.br/consorcios/volkswagen/): conteúdo da administradora com atendimento pela RBS Consultoria Inteligente.

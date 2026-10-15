@@ -8,6 +8,9 @@ AddCharset UTF-8 .txt .xml
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+# Recursos públicos do consórcio: PHP no Apache, função Node na Vercel.
+RewriteRule ^api/consorcio-media/?$ proxy/consorcio-media.php [L,QSA]
+
   # Força HTTPS apenas fora do ambiente local.
   RewriteCond %{HTTPS} off
   RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:[0-9]+)?$ [NC]
