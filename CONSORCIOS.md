@@ -61,6 +61,7 @@ consorcios/volkswagen/
   assets/css/volkswagen-rbs.css    ajustes da RBS: estilos que next/image, framer-motion e Radix aplicavam inline/por JS
   assets/js/volkswagen.js          interações: topo, parallax, vídeo, carro deslizante, imagens fixas, menu, rodapé, Libras, pop-up de saída
   assets/fonts/  assets/img/       fontes VW Head/VW Text, imagens e favicons (iguais byte a byte aos oficiais)
+  assets/video/jetta-gli.mp4       vídeo do Jetta GLI (H.264 640×360, 46 s, 4,9 MB), baixado do CDN da Volkswagen
 ```
 
 - Origem: HTML SSR de `https://www.cnvw.com.br/modelos/consorcio-jetta` e CSS `_next/static/chunks/17yy02jv9ojeh.css`, baixados novamente em 17/10/2026. O menu lateral, os submenus, o vídeo e o pop-up de saída são montados só no navegador; foram copiados do DOM renderizado e reconstruídos a partir dos chunks JavaScript oficiais (mesmos limites de rolagem, `threshold` e `rootMargin`). A cópia anterior tinha perdido textos (“Até 100 meses para quitar seu Consórcio Jetta.” e outros) e espaços entre palavras; o texto atual foi conferido contra o SSR oficial.
@@ -74,13 +75,13 @@ consorcios/volkswagen/
 
 ## Hospedagem e subdomínio
 
-Os diretórios são servidos por `index.html`, com assets próprios, e funcionam em qualquer servidor estático (incluindo Live Server): todas as mídias da Embracon são locais. Para um subdomínio que aponte à raiz deste mesmo site, mantenha os caminhos `/consorcios/...` ou adicione um rewrite de host para a administradora escolhida, depois de definir o hostname. Se publicar somente a pasta `consorcios` como raiz de outro site, atualize `homeUrl`, `partnerUrl`, os links à página principal e as URLs canônicas. Não foram feitas alterações de DNS nem publicação na produção.
+Os diretórios são servidos por `index.html`, com assets próprios, e funcionam em qualquer servidor estático (incluindo Live Server): as mídias da Embracon e o vídeo do Jetta são locais. Para um subdomínio que aponte à raiz deste mesmo site, mantenha os caminhos `/consorcios/...` ou adicione um rewrite de host para a administradora escolhida, depois de definir o hostname. Se publicar somente a pasta `consorcios` como raiz de outro site, atualize `homeUrl`, `partnerUrl`, os links à página principal e as URLs canônicas. Não foram feitas alterações de DNS nem publicação na produção.
 
 ## Recursos e limites
 
 Os arquivos públicos essenciais de cada marca estão nas respectivas pastas. O front-end não executa Next.js nem os scripts de rastreamento das administradoras. O formulário continua independente de serviços de leads das administradoras. As consultas, login bancário, contratação e simuladores oficiais não foram copiados. Não calculamos parcelas sem regras: o visitante recebe a simulação no atendimento.
 
-Dependências externas restantes: os vídeos do YouTube da Embracon (carregados de `youtube-nocookie.com` somente após o clique), o vídeo do Jetta, servido diretamente pelo CDN público da Volkswagen (`assets.volkswagen.com`, inserido quando a área entra na tela; se falhar, a área mostra uma foto do Jetta), e o VLibras (`vlibras.gov.br`), carregado somente no clique do botão de Libras da página Volkswagen. A rota `/api/consorcio-media` foi removida, pois todas as mídias da Embracon passaram a ser locais.
+Dependências externas restantes: os vídeos do YouTube da Embracon (carregados de `youtube-nocookie.com` somente após o clique) e o VLibras (`vlibras.gov.br`), carregado somente no clique do botão de Libras da página Volkswagen. A rota `/api/consorcio-media` foi removida, pois todas as mídias da Embracon passaram a ser locais.
 
 As páginas preservam a estrutura e o CSS originais; composição client-only e interações foram reconstruídas. A validação visual comparativa em desktop e celular (360, 390, 768, 1024 e 1440 px) continua obrigatória antes de considerar a cópia pixel perfect.
 

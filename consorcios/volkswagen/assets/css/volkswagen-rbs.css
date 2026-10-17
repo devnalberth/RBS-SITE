@@ -32,7 +32,7 @@ body[data-consorcio-brand="volkswagen"] { --consorcio-brand: #004666; }
 [data-vw-libras-label] { transition: opacity .2s ease-out, transform .2s ease-out; }
 [data-vw-libras-label].is-entering { opacity: 0; transform: translateY(-.25rem); }
 
-/* Fallback quando o vídeo do CDN da Volkswagen não carrega */
+/* Fallback quando o vídeo do Jetta não carrega */
 [data-vw-video] { position: relative; }
 
 /* E-mail da RBS no rodapé: quebra em telas de 360 px em vez de criar rolagem lateral */

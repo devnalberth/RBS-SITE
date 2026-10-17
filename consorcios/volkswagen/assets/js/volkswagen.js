@@ -41,8 +41,8 @@
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
   onScroll();
 
-  /* Vídeo do Jetta: inserido quando a área entra na tela, como no original. Se o CDN da
-     Volkswagen falhar, a área mostra uma foto do Jetta. */
+  /* Vídeo do Jetta (assets/video): inserido quando a área entra na tela, como no original.
+     Se o arquivo não carregar, a área mostra uma foto do Jetta. */
   const videoBox = $('[data-vw-video]');
   if (videoBox && 'IntersectionObserver' in window) {
     const videoObserver = new IntersectionObserver((entries) => {
