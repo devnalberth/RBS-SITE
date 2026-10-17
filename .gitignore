@@ -16,3 +16,4 @@
 # Leads do formulário de credenciamento
 /api/dados/*
 !/api/dados/.htaccess
+._*

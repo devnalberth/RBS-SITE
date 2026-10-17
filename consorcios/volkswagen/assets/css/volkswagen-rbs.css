@@ -1,0 +1,43 @@
+/*
+ * Ajustes da RBS para a página Consórcio Jetta.
+ * O CSS original (volkswagen.css) não é editado. Aqui ficam os estilos que o Next.js aplicava
+ * inline ou por JavaScript (next/image, framer-motion, Radix) e a cor do formulário da RBS.
+ */
+
+body[data-consorcio-brand="volkswagen"] { --consorcio-brand: #004666; }
+
+/* next/image com "fill": o original grava estes valores no atributo style de cada <img> */
+.vw-img-fill { position: absolute; inset: 0; width: 100%; height: 100%; color: transparent; }
+[data-vw-hero-img] { object-position: 30% 30%; }
+
+/* Parallax do topo (framer-motion): volkswagen.js atualiza --vw-parallax durante a rolagem */
+[data-vw-parallax] { transform: translateY(var(--vw-parallax, 0px)); will-change: transform; }
+
+/* Menu lateral (Radix Dialog + framer-motion no original). O <dialog> só cobre a tela para
+   receber o clique fora da gaveta; o original não escurece a página. */
+.vw-menu { position: fixed; inset: 0; width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; overflow: hidden; }
+.vw-menu:not([open]) { display: none; }
+.vw-menu::backdrop { background: transparent; }
+.vw-menu [data-vw-drawer] { transform: translateX(-100%); transition: transform .4s cubic-bezier(.22, 1, .36, 1); }
+.vw-menu.is-open [data-vw-drawer] { transform: translateX(0); }
+.vw-menu [data-vw-subpanel] { transform: translateX(100%); transition: transform .4s cubic-bezier(.22, 1, .36, 1); }
+.vw-menu [data-vw-subpanel].is-open { transform: translateX(0); }
+.vw-menu [data-vw-subpanel][hidden] { display: none; }
+
+/* Rodapé (Headless UI Disclosure): o painel fechado fica com altura 0, como no original */
+[data-vw-disclosure-panel].is-closed { height: 0; }
+
+/* Pop-up de saída e painel "Libras" do botão de acessibilidade */
+[data-vw-exit][hidden], [data-vw-libras-label][hidden] { display: none; }
+[data-vw-libras-label] { transition: opacity .2s ease-out, transform .2s ease-out; }
+[data-vw-libras-label].is-entering { opacity: 0; transform: translateY(-.25rem); }
+
+/* Fallback quando o vídeo do CDN da Volkswagen não carrega */
+[data-vw-video] { position: relative; }
+
+/* E-mail da RBS no rodapé: quebra em telas de 360 px em vez de criar rolagem lateral */
+[data-vw-email] { overflow-wrap: anywhere; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-vw-parallax] { transform: none; }
+}

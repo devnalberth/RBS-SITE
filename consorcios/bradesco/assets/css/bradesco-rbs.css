@@ -1,0 +1,74 @@
+/*
+ * Ajustes da RBS para a página Bradesco Consórcios.
+ * O visual vem do CSS original (bradesco.css); aqui ficam apenas:
+ *  - os estilos que o original aplicava inline ou por JavaScript;
+ *  - os ajustes dos elementos trocados pela RBS (barra superior sem login, QR code, contatos).
+ */
+
+body {
+  --consorcio-brand: #cc092f; /* cor do formulário da RBS */
+}
+
+/* Barra superior: no original é exibida pelo script do Internet Banking. */
+div#topBar.headertopBar {
+  display: block;
+}
+/* Posição final do botão no original (ajustada por script lá) e sem o separador do menu de acessibilidade, que não foi copiado. */
+div#topBar.headertopBar div.canal-consorciado {
+  right: 160px;
+}
+div#topBar.headertopBar div.canal-consorciado a:after {
+  display: none;
+}
+
+/* Cards sobre o banner (no original: style="z-index: 9"). */
+.banner.banner-cards {
+  z-index: 9;
+}
+
+/* ---------- Banner (carrossel Swiper) ---------- */
+/* O original usa <button> com estilos inline; aqui o slide é um link para o site da RBS. */
+.swiper-slide .swiper-banner-link {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+.swiper-slide .swiper-banner-link img {
+  width: 100vw;
+  height: auto;
+}
+
+/* ---------- Rodapé (estilos inline do original) ---------- */
+.c-footer .c-gradiente {
+  background: linear-gradient(270deg, rgb(204, 9, 47) 40%, rgb(184, 21, 112) 90%);
+}
+.c-footer .c-seguir__label {
+  font-weight: bold;
+  font-size: 12px;
+}
+.c-footer .c-endereco {
+  opacity: .7;
+  font-size: 12px;
+}
+/* O original capitaliza o endereço; a frase da RBS fica com a grafia normal. */
+.c-footer .c-endereco address {
+  text-transform: none;
+}
+.c-footer .c-rapido a {
+  opacity: .7;
+}
+
+/* ---------- Contatos da RBS ---------- */
+/* E-mail mais longo que os telefones do original: quebra a linha em telas estreitas. */
+a[href^="mailto:"] {
+  overflow-wrap: anywhere;
+}
+.atendimento strong a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* A rolagem da página é animada pelo jQuery, como no original; a rolagem suave do CSS compartilhado faria a animação dobrar. */
+html {
+  scroll-behavior: auto;
+}

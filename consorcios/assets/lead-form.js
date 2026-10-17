@@ -10,6 +10,7 @@
   let category = '', product = '', previousFocus;
   document.querySelectorAll('[data-company]').forEach((el) => { el.textContent = config.company; });
   document.querySelectorAll('[data-company-home]').forEach((el) => { el.href = config.homeUrl; });
+  document.querySelectorAll('[data-company-partner]').forEach((el) => { el.href = config.partnerUrl || config.homeUrl; });
 
   function showStep(step) {
     dialog.querySelectorAll('[data-lead-step]').forEach((el) => { el.hidden = Number(el.dataset.leadStep) !== step; });
@@ -24,9 +25,9 @@
     const raw = trigger?.dataset.category || '';
     const aliases = { Carros: 'Automóveis', Imoveis: 'Imóveis', Servicos: 'Serviços' };
     category = aliases[raw] || (core.categories.includes(raw) ? raw : '');
-    product = trigger?.dataset.product || (brand === 'volkswagen' ? 'Jetta' : '');
-    if (brand === 'volkswagen') category = 'Automóveis';
-    if (brand === 'bradesco' && !category) category = 'Automóveis';
+    // Volkswagen: sem produto informado, o atendimento é do Jetta; data-product="" indica a modalidade geral.
+    product = trigger?.dataset.product ?? (brand === 'volkswagen' ? 'Jetta' : '');
+    if (brand === 'volkswagen' && !category) category = 'Automóveis';
     showStep(category ? 2 : 1);
     const menu = document.getElementById('consorcio-menu');
     if (menu?.open) menu.close();
@@ -48,7 +49,9 @@
     dialog.querySelector('[data-whatsapp-fallback]').removeAttribute('href');
     dialog.querySelector('[data-form-error]').textContent = '';
     paintErrors({});
-    previousFocus?.focus({ preventScroll: true });
+    // Se o formulário foi aberto de dentro do menu (já fechado), o foco volta ao botão do menu.
+    const target = previousFocus?.closest('dialog:not([open])') ? document.querySelector('[data-mobile-menu]') : previousFocus;
+    target?.focus({ preventScroll: true });
   });
   dialog.querySelectorAll('[data-select-category]').forEach((button) => button.addEventListener('click', () => {
     category = button.dataset.selectCategory; showStep(2); form.elements.name.focus();
