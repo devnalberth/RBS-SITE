@@ -163,6 +163,9 @@ section[id], [id].anchor { scroll-margin-top: calc(var(--header-h) + var(--heade
 .rbs-btn--outline .rbs-btn__icon { background: var(--azul-100); }
 .rbs-btn--outline:hover { background: var(--azul-100); }
 .rbs-btn--sm { min-height: 44px; padding-left: 20px; font-size: 14px; }
+/* Sem o ícone circular à direita, o botão fica com o mesmo respiro dos dois lados */
+.rbs-btn:not(:has(.rbs-btn__icon)) { padding-right: 24px; }
+.rbs-btn--sm:not(:has(.rbs-btn__icon)) { padding-right: 20px; }
 .rbs-btn--sm .rbs-btn__icon { width: 32px; height: 32px; }
 .rbs-btn--block { width: 100%; justify-content: space-between; }
 .rbs-btn[disabled], .rbs-btn[aria-disabled="true"] { opacity: .55; cursor: progress; }

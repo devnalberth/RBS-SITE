@@ -11,8 +11,6 @@ const CONFIG = {
   // Endpoint que registra o lead e envia o e-mail antes de abrir o WhatsApp.
   // Hostinger/PHP: 'api/credenciamento.php' (relativo à raiz do site). Vazio = só WhatsApp.
   formEndpoint: 'api/credenciamento.php',
-  // Link da Roma Capital (consumidor final)
-  romaCapitalUrl: '#',
   // Validação da certificação PCA-10. Ideal: o link do badge do Rodrigo na Brasil Open Badge.
   // Enquanto isso, a consulta pública de certificados da ABAC (busca por nome ou CPF).
   pcaValidationUrl: 'https://moodle.abac.kaptiva.com.br/mod/customcert/verify_certificate.php',
@@ -37,11 +35,10 @@ const CONFIG = {
     set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) { /* sem storage */ } },
   };
 
-  /* ---------- links de WhatsApp, e-mail e Roma Capital ---------- */
+  /* ---------- links de WhatsApp, e-mail e certificação ---------- */
   $$('[data-wa]').forEach((a) => { a.href = waLink(a.dataset.wa); });
   $$('[data-email]').forEach((a) => { a.href = `mailto:${CONFIG.email}`; a.textContent = CONFIG.email; });
   $$('[data-email-text]').forEach((el) => { el.textContent = CONFIG.email; });
-  $$('[data-roma]').forEach((a) => { a.href = CONFIG.romaCapitalUrl; });
   $$('[data-pca]').forEach((a) => { a.href = CONFIG.pcaValidationUrl; });
   $$('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
 
