@@ -1,0 +1,321 @@
+/*
+ * Ajustes da RBS para a página Embracon.
+ * O visual vem do CSS original (embracon.css); aqui ficam apenas:
+ *  - os estilos que o Next.js aplicava inline ou via JavaScript (next/image, Framer Motion);
+ *  - as seções renderizadas só no cliente (matriz e órbita de avatares);
+ *  - o player do YouTube (lite-youtube-embed) e os menus do topo.
+ */
+
+/* ---------- Base ---------- */
+body {
+  --consorcio-brand: #ce171e; /* cor do formulário e dos menus da RBS */
+  overflow-x: clip;
+}
+
+/* next/image com "fill": a imagem ocupa todo o contêiner posicionado. */
+.emb-fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: transparent;
+}
+
+/* E-mail da RBS no rodapé é mais longo que os do original: quebra a linha em telas estreitas. */
+footer a[href^="mailto:"] {
+  overflow-wrap: anywhere;
+}
+
+/* Seções usadas como destino dos menus: deixam espaço para o topo fixo. */
+main h2[id] {
+  scroll-margin-top: 6rem;
+}
+
+/* ---------- Animações de entrada (Framer Motion) ---------- */
+/* Só escondem o conteúdo quando o JavaScript está ativo (classe adicionada por embracon.js). */
+.emb-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .5s ease-out, transform .5s ease-out;
+}
+.emb-js [data-reveal="up-100"] { transform: translateY(100px); }
+.emb-js [data-reveal="right"] { transform: translateX(50px); }
+.emb-js [data-reveal="orbit"] {
+  opacity: .4;
+  transform: translateX(-150px);
+  transition-duration: .6s;
+}
+.emb-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Palavra animada do título (SONHOS, DESAFIOS, METAS, CONQUISTAS). */
+.emb-word {
+  transition: opacity .5s ease-in-out, transform .5s ease-in-out;
+}
+.emb-word.is-leaving {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.emb-word.is-entering {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: none;
+}
+
+/* ---------- Cards "Quais são os tipos de consórcio" ---------- */
+.emb-js .emb-type-card[data-reveal] {
+  transition: opacity .5s ease-out, transform .3s ease-in-out, box-shadow .3s ease-in-out;
+}
+.emb-type-card:hover,
+.emb-js .emb-type-card[data-reveal].is-visible:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, .1), 0 10px 10px -5px rgba(0, 0, 0, .04);
+}
+.emb-type-card__icon {
+  transition: transform .2s ease-in-out;
+}
+.emb-type-card:hover .emb-type-card__icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* ---------- Carrosséis de ícones e avatares ---------- */
+.emb-icon-slot {
+  width: 40px;
+  height: 40px;
+}
+.emb-avatar-slot {
+  width: 77px;
+  height: 77px;
+}
+.emb-avatar-slot img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 50%;
+  color: transparent;
+}
+@media (min-width: 640px) {
+  .emb-icon-slot { width: 60px; height: 60px; }
+  .emb-avatar-slot { width: 90px; height: 90px; }
+}
+@media (min-width: 1024px) {
+  .emb-icon-slot { width: 50px; height: 50px; }
+  .emb-avatar-slot { width: 100px; height: 100px; }
+}
+
+/* ---------- Órbita de avatares ("O que é consórcio") ---------- */
+.emb-orbit {
+  --orbit-radius: 214px;
+  --avatar-size: 77px;
+  animation: emb-spin 40s linear infinite;
+}
+.emb-orbit__avatar {
+  --angle: calc(var(--i) / 11 * 360deg);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  translate:
+    calc(cos(var(--angle)) * var(--orbit-radius) - var(--avatar-size) / 2)
+    calc(sin(var(--angle)) * var(--orbit-radius) - var(--avatar-size) / 2);
+  animation: emb-spin-reverse 40s linear infinite;
+  cursor: pointer;
+}
+.emb-orbit__avatar img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 50%;
+}
+.emb-orbit__avatar:nth-child(1) { --i: 0; }
+.emb-orbit__avatar:nth-child(2) { --i: 1; }
+.emb-orbit__avatar:nth-child(3) { --i: 2; }
+.emb-orbit__avatar:nth-child(4) { --i: 3; }
+.emb-orbit__avatar:nth-child(5) { --i: 4; }
+.emb-orbit__avatar:nth-child(6) { --i: 5; }
+.emb-orbit__avatar:nth-child(7) { --i: 6; }
+.emb-orbit__avatar:nth-child(8) { --i: 7; }
+.emb-orbit__avatar:nth-child(9) { --i: 8; }
+.emb-orbit__avatar:nth-child(10) { --i: 9; }
+.emb-orbit__avatar:nth-child(11) { --i: 10; }
+.emb-orbit-icon svg {
+  width: 35px;
+  height: 35px;
+}
+.emb-orbit-center {
+  animation: emb-pulse 2s ease-in-out infinite;
+}
+@media (min-width: 640px) {
+  .emb-orbit { --orbit-radius: 270px; --avatar-size: 100px; }
+  .emb-orbit-icon svg { width: 50px; height: 50px; }
+}
+@media (min-width: 1024px) {
+  .emb-orbit { --orbit-radius: 360px; --avatar-size: 130px; }
+  .emb-orbit-icon svg { width: 70px; height: 70px; }
+}
+@keyframes emb-spin {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+@keyframes emb-spin-reverse {
+  from { rotate: 0deg; }
+  to { rotate: -360deg; }
+}
+@keyframes emb-pulse {
+  0%, 100% { transform: scale(.75); }
+  50% { transform: scale(.825); }
+}
+
+/* ---------- Seção da matriz ("Estamos há mais de 30 anos") ---------- */
+/* Escala, cor da sobreposição e deslocamento da foto são atualizados por embracon.js durante a rolagem. */
+.emb-history__frame {
+  transform: scale(var(--history-scale, 1));
+}
+.emb-history__shade {
+  background-color: rgba(0, 0, 0, var(--history-shade, 1));
+}
+.emb-history__photo {
+  transform: translateY(var(--history-y, 19%));
+}
+.emb-history__photo img {
+  object-fit: cover;
+  object-position: 65% 10%;
+}
+@media (min-width: 1024px) {
+  .emb-history__photo img { object-position: right top; }
+}
+
+/* ---------- YouTube (lite-youtube-embed, de Paul Irish) ---------- */
+lite-youtube {
+  background-color: #000;
+  position: relative;
+  display: block;
+  contain: content;
+  background-position: center center;
+  background-size: cover;
+  cursor: pointer;
+  max-width: 720px;
+}
+lite-youtube::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  background-image: linear-gradient(180deg, rgb(0 0 0 / 67%) 0%, rgb(0 0 0 / 54%) 14%, rgb(0 0 0 / 15%) 54%, rgb(0 0 0 / 5%) 72%, rgb(0 0 0 / 0%) 94%);
+  height: 99px;
+  width: 100%;
+}
+lite-youtube::after {
+  content: "";
+  display: block;
+  padding-bottom: calc(100% / (16 / 9));
+}
+lite-youtube > iframe {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 0;
+}
+lite-youtube > .lyt-playbtn {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: no-repeat center/68px 48px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>');
+  position: absolute;
+  cursor: pointer;
+  z-index: 1;
+  filter: grayscale(100%);
+  transition: filter .1s cubic-bezier(0, 0, .2, 1);
+  border: 0;
+}
+lite-youtube:hover > .lyt-playbtn,
+lite-youtube .lyt-playbtn:focus {
+  filter: none;
+}
+lite-youtube.lyt-activated {
+  cursor: unset;
+}
+lite-youtube.lyt-activated::before,
+lite-youtube.lyt-activated > .lyt-playbtn {
+  opacity: 0;
+  pointer-events: none;
+}
+.lyt-visually-hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+/* Miniaturas locais (o original busca em i.ytimg.com). */
+lite-youtube[videoid="pkl5CYHm_yQ"] { background-image: url("../img/youtube/pkl5CYHm_yQ.jpg"); }
+lite-youtube[videoid="C2gXI8HqtHA"] { background-image: url("../img/youtube/C2gXI8HqtHA.jpg"); }
+lite-youtube[videoid="9U7Vuplo2ec"] { background-image: url("../img/youtube/9U7Vuplo2ec.jpg"); }
+lite-youtube[videoid="zglMGZCqSl8"] { background-image: url("../img/youtube/zglMGZCqSl8.jpg"); }
+
+/* ---------- Submenus do topo (Radix NavigationMenu) ---------- */
+.emb-nav-viewport {
+  animation: scaleIn .2s ease;
+}
+/* O Radix mede o conteúdo na menor largura possível; o min-w-* de cada lista define o tamanho final. */
+.emb-nav-viewport > div {
+  width: min-content;
+}
+
+/* ---------- Menu móvel (#consorcio-menu) ---------- */
+.consorcio-menu details {
+  border-bottom: 1px solid #e5e7eb;
+}
+.consorcio-menu summary {
+  padding: 14px 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.consorcio-menu details ul {
+  display: grid;
+  gap: 4px;
+  padding: 0 0 12px;
+}
+.consorcio-menu details a,
+.consorcio-menu details button {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #202b39;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.consorcio-menu details a:hover,
+.consorcio-menu details button:hover {
+  background: #ce181e;
+  color: #fff;
+}
+
+/* ---------- Movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .emb-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .emb-orbit,
+  .emb-orbit__avatar,
+  .emb-orbit-center {
+    animation: none;
+  }
+  .emb-type-card:hover,
+  .emb-type-card:hover .emb-type-card__icon {
+    transform: none;
+  }
+}

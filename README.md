@@ -26,7 +26,6 @@ llms.txt                    Resumo do site para assistentes de IA (ChatGPT, Clau
 
 1. **Links:** no topo de `assets/js/main.js`, preencha `CONFIG`:
    - `whatsapp`: número oficial só com dígitos (hoje `5511989864178`)
-   - `romaCapitalUrl`: link da Roma Capital
    - `pcaValidationUrl`: hoje aponta para a consulta pública de certificados da ABAC. Troque pelo link do badge do Rodrigo na Brasil Open Badge assim que ele ativar.
    - `formEndpoint`: já está em `'api/credenciamento.php'`, que grava o lead e envia o e-mail (veja abaixo). Vazio = o formulário só abre o WhatsApp.
 2. **Fotos:** a home usa as fotos do site antigo, em `assets/images/webp/`. Para trocar, substitua o `src` da imagem em `index.html`. Se um arquivo não existir, o site mostra um bloco azul com a legenda da foto que falta.

@@ -80,7 +80,18 @@ function fetch_upstream(string $url, array $headers, array $resolve = []): array
         : ['status' => $status > 0 ? $status : 200, 'body' => $body];
 }
 
-$config = require __DIR__ . '/config.php';
+// api/config.php fica fora do Git: precisa ser criado no servidor a partir de config.example.php.
+$configFile = __DIR__ . '/config.php';
+if (!is_file($configFile)) {
+    error_log('cartas.php: api/config.php não encontrado no servidor.');
+    proxy_json_error(500, 'missing_api_config', 'API não configurada.');
+}
+
+$config = require $configFile;
+if (!is_array($config)) {
+    proxy_json_error(500, 'invalid_api_config', 'API não configurada.');
+}
+
 $apiKey = trim((string) ($config['investmaster_api_key'] ?? ''));
 $baseUrl = rtrim(trim((string) ($config['investmaster_api_base_url'] ?? '')), '/');
 
